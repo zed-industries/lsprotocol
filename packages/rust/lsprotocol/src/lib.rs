@@ -94,13 +94,6 @@ pub enum OR7<T, U, V, W, X, Y, Z> {
     Z(Z),
 }
 
-/// This allows a field to always have null or empty value.
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(untagged)]
-pub enum LSPNull {
-    None,
-}
-
 /// The LSP any type.
 /// Please note that strictly speaking a property with the value `undefined`
 /// can't be converted into JSON preserving the property name. However for
@@ -9496,7 +9489,7 @@ pub struct ExitNotification {
     /// The method to be invoked.
     pub method: LSPNotificationMethods,
 
-    pub params: Option<LSPNull>,
+    pub params: Option<()>,
 }
 
 /// The configuration change notification is sent from the client to the server
@@ -9804,7 +9797,7 @@ pub struct WorkspaceFoldersRequest {
     /// The request id.
     pub id: LSPId,
 
-    pub params: Option<LSPNull>,
+    pub params: Option<()>,
 }
 
 /// Response to the [WorkspaceFoldersRequest].
@@ -9983,7 +9976,7 @@ pub struct FoldingRangeRefreshRequest {
     /// The request id.
     pub id: LSPId,
 
-    pub params: Option<LSPNull>,
+    pub params: Option<()>,
 }
 
 /// Response to the [FoldingRangeRefreshRequest].
@@ -9999,7 +9992,7 @@ pub struct FoldingRangeRefreshResponse {
     /// The request id.
     pub id: Option<LSPId>,
 
-    pub result: LSPNull,
+    pub result: (),
 }
 
 /// A request to resolve the type definition locations of a symbol at a given text
@@ -10104,7 +10097,7 @@ pub struct WorkDoneProgressCreateResponse {
     /// The request id.
     pub id: Option<LSPId>,
 
-    pub result: LSPNull,
+    pub result: (),
 }
 
 /// A request to result a `CallHierarchyItem` in a document at a given position.
@@ -10325,7 +10318,7 @@ pub struct SemanticTokensRefreshRequest {
     /// The request id.
     pub id: LSPId,
 
-    pub params: Option<LSPNull>,
+    pub params: Option<()>,
 }
 
 /// Response to the [SemanticTokensRefreshRequest].
@@ -10341,7 +10334,7 @@ pub struct SemanticTokensRefreshResponse {
     /// The request id.
     pub id: Option<LSPId>,
 
-    pub result: LSPNull,
+    pub result: (),
 }
 
 /// A request to show a document. This request might open an
@@ -10719,7 +10712,7 @@ pub struct InlineValueRefreshRequest {
     /// The request id.
     pub id: LSPId,
 
-    pub params: Option<LSPNull>,
+    pub params: Option<()>,
 }
 
 /// Response to the [InlineValueRefreshRequest].
@@ -10735,7 +10728,7 @@ pub struct InlineValueRefreshResponse {
     /// The request id.
     pub id: Option<LSPId>,
 
-    pub result: LSPNull,
+    pub result: (),
 }
 
 /// A request to provide inlay hints in a document. The request's parameter is of
@@ -10824,7 +10817,7 @@ pub struct InlayHintRefreshRequest {
     /// The request id.
     pub id: LSPId,
 
-    pub params: Option<LSPNull>,
+    pub params: Option<()>,
 }
 
 /// Response to the [InlayHintRefreshRequest].
@@ -10840,7 +10833,7 @@ pub struct InlayHintRefreshResponse {
     /// The request id.
     pub id: Option<LSPId>,
 
-    pub result: LSPNull,
+    pub result: (),
 }
 
 /// The document diagnostic request definition.
@@ -10926,7 +10919,7 @@ pub struct DiagnosticRefreshRequest {
     /// The request id.
     pub id: LSPId,
 
-    pub params: Option<LSPNull>,
+    pub params: Option<()>,
 }
 
 /// Response to the [DiagnosticRefreshRequest].
@@ -10942,7 +10935,7 @@ pub struct DiagnosticRefreshResponse {
     /// The request id.
     pub id: Option<LSPId>,
 
-    pub result: LSPNull,
+    pub result: (),
 }
 
 /// A request to provide inline completions in a document. The request's parameter is of
@@ -11055,7 +11048,7 @@ pub struct TextDocumentContentRefreshResponse {
     /// The request id.
     pub id: Option<LSPId>,
 
-    pub result: LSPNull,
+    pub result: (),
 }
 
 /// The `client/registerCapability` request is sent from the server to the client to register a new capability
@@ -11088,7 +11081,7 @@ pub struct RegistrationResponse {
     /// The request id.
     pub id: Option<LSPId>,
 
-    pub result: LSPNull,
+    pub result: (),
 }
 
 /// The `client/unregisterCapability` request is sent from the server to the client to unregister a previously registered capability
@@ -11121,7 +11114,7 @@ pub struct UnregistrationResponse {
     /// The request id.
     pub id: Option<LSPId>,
 
-    pub result: LSPNull,
+    pub result: (),
 }
 
 /// The initialize request is sent from the client to the server.
@@ -11176,7 +11169,7 @@ pub struct ShutdownRequest {
     /// The request id.
     pub id: LSPId,
 
-    pub params: Option<LSPNull>,
+    pub params: Option<()>,
 }
 
 /// Response to the [ShutdownRequest].
@@ -11192,7 +11185,7 @@ pub struct ShutdownResponse {
     /// The request id.
     pub id: Option<LSPId>,
 
-    pub result: LSPNull,
+    pub result: (),
 }
 
 /// The show message request is sent from the server to the client to show a message
@@ -11775,7 +11768,7 @@ pub struct CodeLensRefreshRequest {
     /// The request id.
     pub id: LSPId,
 
-    pub params: Option<LSPNull>,
+    pub params: Option<()>,
 }
 
 /// Response to the [CodeLensRefreshRequest].
@@ -11791,7 +11784,7 @@ pub struct CodeLensRefreshResponse {
     /// The request id.
     pub id: Option<LSPId>,
 
-    pub result: LSPNull,
+    pub result: (),
 }
 
 /// A request to provide document links

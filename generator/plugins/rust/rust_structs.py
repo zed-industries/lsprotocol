@@ -329,7 +329,7 @@ def generate_notification(
         properties += [
             model.Property(
                 name="params",
-                type=model.ReferenceType(kind="reference", name="LSPNull"),
+                type=model.ReferenceType(kind="reference", name="()"),
                 optional=True,
             )
         ]
@@ -406,7 +406,7 @@ def generate_request(
         properties += [
             model.Property(
                 name="params",
-                type=model.ReferenceType(kind="reference", name="LSPNull"),
+                type=model.ReferenceType(kind="reference", name="()"),
                 optional=True,
             )
         ]
@@ -436,7 +436,7 @@ def generate_response(
             properties += [
                 model.Property(
                     name="result",
-                    type=model.ReferenceType(kind="reference", name="LSPNull"),
+                    type=model.ReferenceType(kind="reference", name="()"),
                 )
             ]
         else:

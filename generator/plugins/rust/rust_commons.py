@@ -199,19 +199,6 @@ def generate_custom_enum(type_data: TypeData) -> None:
             "",
         ],
     )
-    type_data.add_type_info(
-        model.ReferenceType(kind="reference", name="LSPNull"),
-        "LSPNull",
-        [
-            "/// This allows a field to always have null or empty value.",
-            "#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]",
-            "#[serde(untagged)]",
-            "pub enum LSPNull {",
-            "    None,",
-            "}",
-            "",
-        ],
-    )
 
 
 def get_definition(
