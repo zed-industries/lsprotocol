@@ -313,9 +313,9 @@ def generate_notification(
         params_name = notification_def.params.name
     name = get_message_type_name(notification_def)
 
-    lines = [f"pub struct {name};"]
-    lines += _get_doc(notification_def.documentation)
+    lines = _get_doc(notification_def.documentation)
     lines += generate_extras(notification_def)
+    lines += [f"pub struct {name};", ""]
     lines += [f"impl Notification for {name} {{"
         f"    type Params = {params_name};",
         f"    const METHOD: &'static str = \"{fix_method(notification_def.method)}\";"
