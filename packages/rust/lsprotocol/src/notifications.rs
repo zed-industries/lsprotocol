@@ -23,180 +23,180 @@ pub struct WorkspaceDidChangeWorkspaceFoldersNotification;
 
 impl Notification for WorkspaceDidChangeWorkspaceFoldersNotification {
     type Params = DidChangeWorkspaceFoldersParams;
-    const METHOD: &'static str = "WorkspaceDidChangeWorkspaceFolders";
+    const METHOD: &'static str = "workspace/didChangeWorkspaceFolders";
 }
 
 pub struct WindowWorkDoneProgressCancelNotification;
 
 impl Notification for WindowWorkDoneProgressCancelNotification {
     type Params = WorkDoneProgressCancelParams;
-    const METHOD: &'static str = "WindowWorkDoneProgressCancel";
+    const METHOD: &'static str = "window/workDoneProgress/cancel";
 }
 
 pub struct WorkspaceDidCreateFilesNotification;
 
 impl Notification for WorkspaceDidCreateFilesNotification {
     type Params = CreateFilesParams;
-    const METHOD: &'static str = "WorkspaceDidCreateFiles";
+    const METHOD: &'static str = "workspace/didCreateFiles";
 }
 
 pub struct WorkspaceDidRenameFilesNotification;
 
 impl Notification for WorkspaceDidRenameFilesNotification {
     type Params = RenameFilesParams;
-    const METHOD: &'static str = "WorkspaceDidRenameFiles";
+    const METHOD: &'static str = "workspace/didRenameFiles";
 }
 
 pub struct WorkspaceDidDeleteFilesNotification;
 
 impl Notification for WorkspaceDidDeleteFilesNotification {
     type Params = DeleteFilesParams;
-    const METHOD: &'static str = "WorkspaceDidDeleteFiles";
+    const METHOD: &'static str = "workspace/didDeleteFiles";
 }
 
 pub struct NotebookDocumentDidOpenNotification;
 
 impl Notification for NotebookDocumentDidOpenNotification {
     type Params = DidOpenNotebookDocumentParams;
-    const METHOD: &'static str = "NotebookDocumentDidOpen";
+    const METHOD: &'static str = "notebookDocument/didOpen";
 }
 
 pub struct NotebookDocumentDidChangeNotification;
 
 impl Notification for NotebookDocumentDidChangeNotification {
     type Params = DidChangeNotebookDocumentParams;
-    const METHOD: &'static str = "NotebookDocumentDidChange";
+    const METHOD: &'static str = "notebookDocument/didChange";
 }
 
 pub struct NotebookDocumentDidSaveNotification;
 
 impl Notification for NotebookDocumentDidSaveNotification {
     type Params = DidSaveNotebookDocumentParams;
-    const METHOD: &'static str = "NotebookDocumentDidSave";
+    const METHOD: &'static str = "notebookDocument/didSave";
 }
 
 pub struct NotebookDocumentDidCloseNotification;
 
 impl Notification for NotebookDocumentDidCloseNotification {
     type Params = DidCloseNotebookDocumentParams;
-    const METHOD: &'static str = "NotebookDocumentDidClose";
+    const METHOD: &'static str = "notebookDocument/didClose";
 }
 
 pub struct InitializedNotification;
 
 impl Notification for InitializedNotification {
     type Params = InitializedParams;
-    const METHOD: &'static str = "Initialized";
+    const METHOD: &'static str = "initialized";
 }
 
 pub struct ExitNotification;
 
 impl Notification for ExitNotification {
     type Params = ();
-    const METHOD: &'static str = "Exit";
+    const METHOD: &'static str = "exit";
 }
 
 pub struct WorkspaceDidChangeConfigurationNotification;
 
 impl Notification for WorkspaceDidChangeConfigurationNotification {
     type Params = DidChangeConfigurationParams;
-    const METHOD: &'static str = "WorkspaceDidChangeConfiguration";
+    const METHOD: &'static str = "workspace/didChangeConfiguration";
 }
 
 pub struct WindowShowMessageNotification;
 
 impl Notification for WindowShowMessageNotification {
     type Params = ShowMessageParams;
-    const METHOD: &'static str = "WindowShowMessage";
+    const METHOD: &'static str = "window/showMessage";
 }
 
 pub struct WindowLogMessageNotification;
 
 impl Notification for WindowLogMessageNotification {
     type Params = LogMessageParams;
-    const METHOD: &'static str = "WindowLogMessage";
+    const METHOD: &'static str = "window/logMessage";
 }
 
 pub struct TelemetryEventNotification;
 
 impl Notification for TelemetryEventNotification {
     type Params = LSPAny;
-    const METHOD: &'static str = "TelemetryEvent";
+    const METHOD: &'static str = "telemetry/event";
 }
 
 pub struct TextDocumentDidOpenNotification;
 
 impl Notification for TextDocumentDidOpenNotification {
     type Params = DidOpenTextDocumentParams;
-    const METHOD: &'static str = "TextDocumentDidOpen";
+    const METHOD: &'static str = "textDocument/didOpen";
 }
 
 pub struct TextDocumentDidChangeNotification;
 
 impl Notification for TextDocumentDidChangeNotification {
     type Params = DidChangeTextDocumentParams;
-    const METHOD: &'static str = "TextDocumentDidChange";
+    const METHOD: &'static str = "textDocument/didChange";
 }
 
 pub struct TextDocumentDidCloseNotification;
 
 impl Notification for TextDocumentDidCloseNotification {
     type Params = DidCloseTextDocumentParams;
-    const METHOD: &'static str = "TextDocumentDidClose";
+    const METHOD: &'static str = "textDocument/didClose";
 }
 
 pub struct TextDocumentDidSaveNotification;
 
 impl Notification for TextDocumentDidSaveNotification {
     type Params = DidSaveTextDocumentParams;
-    const METHOD: &'static str = "TextDocumentDidSave";
+    const METHOD: &'static str = "textDocument/didSave";
 }
 
 pub struct TextDocumentWillSaveNotification;
 
 impl Notification for TextDocumentWillSaveNotification {
     type Params = WillSaveTextDocumentParams;
-    const METHOD: &'static str = "TextDocumentWillSave";
+    const METHOD: &'static str = "textDocument/willSave";
 }
 
 pub struct WorkspaceDidChangeWatchedFilesNotification;
 
 impl Notification for WorkspaceDidChangeWatchedFilesNotification {
     type Params = DidChangeWatchedFilesParams;
-    const METHOD: &'static str = "WorkspaceDidChangeWatchedFiles";
+    const METHOD: &'static str = "workspace/didChangeWatchedFiles";
 }
 
 pub struct TextDocumentPublishDiagnosticsNotification;
 
 impl Notification for TextDocumentPublishDiagnosticsNotification {
     type Params = PublishDiagnosticsParams;
-    const METHOD: &'static str = "TextDocumentPublishDiagnostics";
+    const METHOD: &'static str = "textDocument/publishDiagnostics";
 }
 
 pub struct SetTraceNotification;
 
 impl Notification for SetTraceNotification {
     type Params = SetTraceParams;
-    const METHOD: &'static str = "SetTrace";
+    const METHOD: &'static str = "setTrace";
 }
 
 pub struct LogTraceNotification;
 
 impl Notification for LogTraceNotification {
     type Params = LogTraceParams;
-    const METHOD: &'static str = "LogTrace";
+    const METHOD: &'static str = "logTrace";
 }
 
 pub struct CancelRequestNotification;
 
 impl Notification for CancelRequestNotification {
     type Params = CancelParams;
-    const METHOD: &'static str = "CancelRequest";
+    const METHOD: &'static str = "cancelRequest";
 }
 
 pub struct ProgressNotification;
 
 impl Notification for ProgressNotification {
     type Params = ProgressParams;
-    const METHOD: &'static str = "Progress";
+    const METHOD: &'static str = "progress";
 }
