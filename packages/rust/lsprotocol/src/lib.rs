@@ -14,26 +14,6 @@ use url::Url;
 
 pub mod notifications;
 pub mod requests;
-/// This type allows extending any string enum to support custom values.
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(untagged)]
-pub enum CustomStringEnum<T> {
-    /// The value is one of the known enum values.
-    Known(T),
-    /// The value is custom.
-    Custom(String),
-}
-
-/// This type allows extending any integer enum to support custom values.
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(untagged)]
-pub enum CustomIntEnum<T> {
-    /// The value is one of the known enum values.
-    Known(T),
-    /// The value is custom.
-    Custom(i32),
-}
-
 /// This allows a field to have two types.
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(untagged)]
@@ -349,82 +329,32 @@ pub enum MessageDirection {
 ///
 /// @since 3.16.0
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-pub enum SemanticTokenTypes {
-    #[serde(rename = "namespace")]
-    Namespace,
-
-    /// Represents a generic type. Acts as a fallback for types which can't be mapped to
-    /// a specific type like class or enum.
-    #[serde(rename = "type")]
-    Type,
-
-    #[serde(rename = "class")]
-    Class,
-
-    #[serde(rename = "enum")]
-    Enum,
-
-    #[serde(rename = "interface")]
-    Interface,
-
-    #[serde(rename = "struct")]
-    Struct,
-
-    #[serde(rename = "typeParameter")]
-    TypeParameter,
-
-    #[serde(rename = "parameter")]
-    Parameter,
-
-    #[serde(rename = "variable")]
-    Variable,
-
-    #[serde(rename = "property")]
-    Property,
-
-    #[serde(rename = "enumMember")]
-    EnumMember,
-
-    #[serde(rename = "event")]
-    Event,
-
-    #[serde(rename = "function")]
-    Function,
-
-    #[serde(rename = "method")]
-    Method,
-
-    #[serde(rename = "macro")]
-    Macro,
-
-    #[serde(rename = "keyword")]
-    Keyword,
-
-    #[serde(rename = "modifier")]
-    Modifier,
-
-    #[serde(rename = "comment")]
-    Comment,
-
-    #[serde(rename = "string")]
-    String,
-
-    #[serde(rename = "number")]
-    Number,
-
-    #[serde(rename = "regexp")]
-    Regexp,
-
-    #[serde(rename = "operator")]
-    Operator,
-
-    /// @since 3.17.0
-    #[serde(rename = "decorator")]
-    Decorator,
-
-    /// @since 3.18.0
-    #[serde(rename = "label")]
-    Label,
+pub struct SemanticTokenTypes(std::borrow::Cow<'static, str>);
+impl SemanticTokenTypes {
+    pub const NAMESPACE: Self = Self(std::borrow::Cow::Borrowed("namespace"));
+    pub const TYPE: Self = Self(std::borrow::Cow::Borrowed("type"));
+    pub const CLASS: Self = Self(std::borrow::Cow::Borrowed("class"));
+    pub const ENUM: Self = Self(std::borrow::Cow::Borrowed("enum"));
+    pub const INTERFACE: Self = Self(std::borrow::Cow::Borrowed("interface"));
+    pub const STRUCT: Self = Self(std::borrow::Cow::Borrowed("struct"));
+    pub const TYPE_PARAMETER: Self = Self(std::borrow::Cow::Borrowed("typeParameter"));
+    pub const PARAMETER: Self = Self(std::borrow::Cow::Borrowed("parameter"));
+    pub const VARIABLE: Self = Self(std::borrow::Cow::Borrowed("variable"));
+    pub const PROPERTY: Self = Self(std::borrow::Cow::Borrowed("property"));
+    pub const ENUM_MEMBER: Self = Self(std::borrow::Cow::Borrowed("enumMember"));
+    pub const EVENT: Self = Self(std::borrow::Cow::Borrowed("event"));
+    pub const FUNCTION: Self = Self(std::borrow::Cow::Borrowed("function"));
+    pub const METHOD: Self = Self(std::borrow::Cow::Borrowed("method"));
+    pub const MACRO: Self = Self(std::borrow::Cow::Borrowed("macro"));
+    pub const KEYWORD: Self = Self(std::borrow::Cow::Borrowed("keyword"));
+    pub const MODIFIER: Self = Self(std::borrow::Cow::Borrowed("modifier"));
+    pub const COMMENT: Self = Self(std::borrow::Cow::Borrowed("comment"));
+    pub const STRING: Self = Self(std::borrow::Cow::Borrowed("string"));
+    pub const NUMBER: Self = Self(std::borrow::Cow::Borrowed("number"));
+    pub const REGEXP: Self = Self(std::borrow::Cow::Borrowed("regexp"));
+    pub const OPERATOR: Self = Self(std::borrow::Cow::Borrowed("operator"));
+    pub const DECORATOR: Self = Self(std::borrow::Cow::Borrowed("decorator"));
+    pub const LABEL: Self = Self(std::borrow::Cow::Borrowed("label"));
 }
 
 /// A set of predefined token modifiers. This set is not fixed
@@ -433,36 +363,18 @@ pub enum SemanticTokenTypes {
 ///
 /// @since 3.16.0
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-pub enum SemanticTokenModifiers {
-    #[serde(rename = "declaration")]
-    Declaration,
-
-    #[serde(rename = "definition")]
-    Definition,
-
-    #[serde(rename = "readonly")]
-    Readonly,
-
-    #[serde(rename = "static")]
-    Static,
-
-    #[serde(rename = "deprecated")]
-    Deprecated,
-
-    #[serde(rename = "abstract")]
-    Abstract,
-
-    #[serde(rename = "async")]
-    Async,
-
-    #[serde(rename = "modification")]
-    Modification,
-
-    #[serde(rename = "documentation")]
-    Documentation,
-
-    #[serde(rename = "defaultLibrary")]
-    DefaultLibrary,
+pub struct SemanticTokenModifiers(std::borrow::Cow<'static, str>);
+impl SemanticTokenModifiers {
+    pub const DECLARATION: Self = Self(std::borrow::Cow::Borrowed("declaration"));
+    pub const DEFINITION: Self = Self(std::borrow::Cow::Borrowed("definition"));
+    pub const READONLY: Self = Self(std::borrow::Cow::Borrowed("readonly"));
+    pub const STATIC: Self = Self(std::borrow::Cow::Borrowed("static"));
+    pub const DEPRECATED: Self = Self(std::borrow::Cow::Borrowed("deprecated"));
+    pub const ABSTRACT: Self = Self(std::borrow::Cow::Borrowed("abstract"));
+    pub const ASYNC: Self = Self(std::borrow::Cow::Borrowed("async"));
+    pub const MODIFICATION: Self = Self(std::borrow::Cow::Borrowed("modification"));
+    pub const DOCUMENTATION: Self = Self(std::borrow::Cow::Borrowed("documentation"));
+    pub const DEFAULT_LIBRARY: Self = Self(std::borrow::Cow::Borrowed("defaultLibrary"));
 }
 
 /// The document diagnostic report kinds.
@@ -482,133 +394,34 @@ pub enum DocumentDiagnosticReportKind {
 }
 
 /// Predefined error codes.
-#[derive(PartialEq, Debug, Eq, Clone)]
-pub enum ErrorCodes {
-    ParseError = -32700,
-
-    InvalidRequest = -32600,
-
-    MethodNotFound = -32601,
-
-    InvalidParams = -32602,
-
-    InternalError = -32603,
-
-    /// Error code indicating that a server received a notification or
-    /// request before the server has received the `initialize` request.
-    ServerNotInitialized = -32002,
-
-    UnknownErrorCode = -32001,
-}
-impl Serialize for ErrorCodes {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        match self {
-            ErrorCodes::ParseError => serializer.serialize_i32(-32700),
-            ErrorCodes::InvalidRequest => serializer.serialize_i32(-32600),
-            ErrorCodes::MethodNotFound => serializer.serialize_i32(-32601),
-            ErrorCodes::InvalidParams => serializer.serialize_i32(-32602),
-            ErrorCodes::InternalError => serializer.serialize_i32(-32603),
-            ErrorCodes::ServerNotInitialized => serializer.serialize_i32(-32002),
-            ErrorCodes::UnknownErrorCode => serializer.serialize_i32(-32001),
-        }
-    }
-}
-impl<'de> Deserialize<'de> for ErrorCodes {
-    fn deserialize<D>(deserializer: D) -> Result<ErrorCodes, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        let value = i32::deserialize(deserializer)?;
-        match value {
-            -32700 => Ok(ErrorCodes::ParseError),
-            -32600 => Ok(ErrorCodes::InvalidRequest),
-            -32601 => Ok(ErrorCodes::MethodNotFound),
-            -32602 => Ok(ErrorCodes::InvalidParams),
-            -32603 => Ok(ErrorCodes::InternalError),
-            -32002 => Ok(ErrorCodes::ServerNotInitialized),
-            -32001 => Ok(ErrorCodes::UnknownErrorCode),
-            _ => Err(serde::de::Error::custom("Unexpected value")),
-        }
-    }
+#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
+pub struct ErrorCodes(i32);
+impl ErrorCodes {
+    pub const PARSE_ERROR: Self = Self(-32700);
+    pub const INVALID_REQUEST: Self = Self(-32600);
+    pub const METHOD_NOT_FOUND: Self = Self(-32601);
+    pub const INVALID_PARAMS: Self = Self(-32602);
+    pub const INTERNAL_ERROR: Self = Self(-32603);
+    pub const SERVER_NOT_INITIALIZED: Self = Self(-32002);
+    pub const UNKNOWN_ERROR_CODE: Self = Self(-32001);
 }
 
-#[derive(PartialEq, Debug, Eq, Clone)]
-pub enum LSPErrorCodes {
-    /// A request failed but it was syntactically correct, e.g the
-    /// method name was known and the parameters were valid. The error
-    /// message should contain human readable information about why
-    /// the request failed.
-    ///
-    /// @since 3.17.0
-    RequestFailed = -32803,
-
-    /// The server cancelled the request. This error code should
-    /// only be used for requests that explicitly support being
-    /// server cancellable.
-    ///
-    /// @since 3.17.0
-    ServerCancelled = -32802,
-
-    /// The server detected that the content of a document got
-    /// modified outside normal conditions. A server should
-    /// NOT send this error code if it detects a content change
-    /// in it unprocessed messages. The result even computed
-    /// on an older state might still be useful for the client.
-    ///
-    /// If a client decides that a result is not of any use anymore
-    /// the client should cancel the request.
-    ContentModified = -32801,
-
-    /// The client has canceled a request and a server has detected
-    /// the cancel.
-    RequestCancelled = -32800,
-}
-impl Serialize for LSPErrorCodes {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        match self {
-            LSPErrorCodes::RequestFailed => serializer.serialize_i32(-32803),
-            LSPErrorCodes::ServerCancelled => serializer.serialize_i32(-32802),
-            LSPErrorCodes::ContentModified => serializer.serialize_i32(-32801),
-            LSPErrorCodes::RequestCancelled => serializer.serialize_i32(-32800),
-        }
-    }
-}
-impl<'de> Deserialize<'de> for LSPErrorCodes {
-    fn deserialize<D>(deserializer: D) -> Result<LSPErrorCodes, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        let value = i32::deserialize(deserializer)?;
-        match value {
-            -32803 => Ok(LSPErrorCodes::RequestFailed),
-            -32802 => Ok(LSPErrorCodes::ServerCancelled),
-            -32801 => Ok(LSPErrorCodes::ContentModified),
-            -32800 => Ok(LSPErrorCodes::RequestCancelled),
-            _ => Err(serde::de::Error::custom("Unexpected value")),
-        }
-    }
+#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
+pub struct LSPErrorCodes(i32);
+impl LSPErrorCodes {
+    pub const REQUEST_FAILED: Self = Self(-32803);
+    pub const SERVER_CANCELLED: Self = Self(-32802);
+    pub const CONTENT_MODIFIED: Self = Self(-32801);
+    pub const REQUEST_CANCELLED: Self = Self(-32800);
 }
 
 /// A set of predefined range kinds.
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-pub enum FoldingRangeKind {
-    /// Folding range for a comment
-    #[serde(rename = "comment")]
-    Comment,
-
-    /// Folding range for an import or include
-    #[serde(rename = "imports")]
-    Imports,
-
-    /// Folding range for a region (e.g. `#region`)
-    #[serde(rename = "region")]
-    Region,
+pub struct FoldingRangeKind(std::borrow::Cow<'static, str>);
+impl FoldingRangeKind {
+    pub const COMMENT: Self = Self(std::borrow::Cow::Borrowed("comment"));
+    pub const IMPORTS: Self = Self(std::borrow::Cow::Borrowed("imports"));
+    pub const REGION: Self = Self(std::borrow::Cow::Borrowed("region"));
 }
 
 /// A symbol kind.
@@ -1273,95 +1086,20 @@ impl<'de> Deserialize<'de> for DocumentHighlightKind {
 
 /// A set of predefined code action kinds
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-pub enum CodeActionKind {
-    /// Empty kind.
-    #[serde(rename = "")]
-    Empty,
-
-    /// Base kind for quickfix actions: 'quickfix'
-    #[serde(rename = "quickfix")]
-    QuickFix,
-
-    /// Base kind for refactoring actions: 'refactor'
-    #[serde(rename = "refactor")]
-    Refactor,
-
-    /// Base kind for refactoring extraction actions: 'refactor.extract'
-    ///
-    /// Example extract actions:
-    ///
-    /// - Extract method
-    /// - Extract function
-    /// - Extract variable
-    /// - Extract interface from class
-    /// - ...
-    #[serde(rename = "refactor.extract")]
-    RefactorExtract,
-
-    /// Base kind for refactoring inline actions: 'refactor.inline'
-    ///
-    /// Example inline actions:
-    ///
-    /// - Inline function
-    /// - Inline variable
-    /// - Inline constant
-    /// - ...
-    #[serde(rename = "refactor.inline")]
-    RefactorInline,
-
-    /// Base kind for refactoring move actions: `refactor.move`
-    ///
-    /// Example move actions:
-    ///
-    /// - Move a function to a new file
-    /// - Move a property between classes
-    /// - Move method to base class
-    /// - ...
-    ///
-    /// @since 3.18.0
-    /// @proposed
-    #[cfg(feature = "proposed")]
-    #[serde(rename = "refactor.move")]
-    RefactorMove,
-
-    /// Base kind for refactoring rewrite actions: 'refactor.rewrite'
-    ///
-    /// Example rewrite actions:
-    ///
-    /// - Convert JavaScript function to class
-    /// - Add or remove parameter
-    /// - Encapsulate field
-    /// - Make method static
-    /// - Move method to base class
-    /// - ...
-    #[serde(rename = "refactor.rewrite")]
-    RefactorRewrite,
-
-    /// Base kind for source actions: `source`
-    ///
-    /// Source code actions apply to the entire file.
-    #[serde(rename = "source")]
-    Source,
-
-    /// Base kind for an organize imports source action: `source.organizeImports`
-    #[serde(rename = "source.organizeImports")]
-    SourceOrganizeImports,
-
-    /// Base kind for auto-fix source actions: `source.fixAll`.
-    ///
-    /// Fix all actions automatically fix errors that have a clear fix that do not require user input.
-    /// They should not suppress errors or perform unsafe fixes such as generating new types or classes.
-    ///
-    /// @since 3.15.0
-    #[serde(rename = "source.fixAll")]
-    SourceFixAll,
-
-    /// Base kind for all code actions applying to the entire notebook's scope. CodeActionKinds using
-    /// this should always begin with `notebook.`
-    ///
-    /// @since 3.18.0
-    #[serde(rename = "notebook")]
-    Notebook,
+pub struct CodeActionKind(std::borrow::Cow<'static, str>);
+impl CodeActionKind {
+    pub const EMPTY: Self = Self(std::borrow::Cow::Borrowed(""));
+    pub const QUICK_FIX: Self = Self(std::borrow::Cow::Borrowed("quickfix"));
+    pub const REFACTOR: Self = Self(std::borrow::Cow::Borrowed("refactor"));
+    pub const REFACTOR_EXTRACT: Self = Self(std::borrow::Cow::Borrowed("refactor.extract"));
+    pub const REFACTOR_INLINE: Self = Self(std::borrow::Cow::Borrowed("refactor.inline"));
+    pub const REFACTOR_MOVE: Self = Self(std::borrow::Cow::Borrowed("refactor.move"));
+    pub const REFACTOR_REWRITE: Self = Self(std::borrow::Cow::Borrowed("refactor.rewrite"));
+    pub const SOURCE: Self = Self(std::borrow::Cow::Borrowed("source"));
+    pub const SOURCE_ORGANIZE_IMPORTS: Self =
+        Self(std::borrow::Cow::Borrowed("source.organizeImports"));
+    pub const SOURCE_FIX_ALL: Self = Self(std::borrow::Cow::Borrowed("source.fixAll"));
+    pub const NOTEBOOK: Self = Self(std::borrow::Cow::Borrowed("notebook"));
 }
 
 /// Code action tags are extra annotations that tweak the behavior of a code action.
@@ -1429,198 +1167,69 @@ pub enum MarkupKind {
 /// Predefined Language kinds
 /// @since 3.18.0
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-pub enum LanguageKind {
-    #[serde(rename = "abap")]
-    Abap,
-
-    #[serde(rename = "bat")]
-    WindowsBat,
-
-    #[serde(rename = "bibtex")]
-    BibTeX,
-
-    #[serde(rename = "clojure")]
-    Clojure,
-
-    #[serde(rename = "coffeescript")]
-    Coffeescript,
-
-    #[serde(rename = "c")]
-    C,
-
-    #[serde(rename = "cpp")]
-    Cpp,
-
-    #[serde(rename = "csharp")]
-    Csharp,
-
-    #[serde(rename = "css")]
-    Css,
-
-    /// @since 3.18.0
-    /// @proposed
-    #[cfg(feature = "proposed")]
-    #[serde(rename = "d")]
-    D,
-
-    /// @since 3.18.0
-    /// @proposed
-    #[cfg(feature = "proposed")]
-    #[serde(rename = "pascal")]
-    Delphi,
-
-    #[serde(rename = "diff")]
-    Diff,
-
-    #[serde(rename = "dart")]
-    Dart,
-
-    #[serde(rename = "dockerfile")]
-    Dockerfile,
-
-    #[serde(rename = "elixir")]
-    Elixir,
-
-    #[serde(rename = "erlang")]
-    Erlang,
-
-    #[serde(rename = "fsharp")]
-    Fsharp,
-
-    #[serde(rename = "git-commit")]
-    GitCommit,
-
-    #[serde(rename = "rebase")]
-    GitRebase,
-
-    #[serde(rename = "go")]
-    Go,
-
-    #[serde(rename = "groovy")]
-    Groovy,
-
-    #[serde(rename = "handlebars")]
-    Handlebars,
-
-    #[serde(rename = "haskell")]
-    Haskell,
-
-    #[serde(rename = "html")]
-    Html,
-
-    #[serde(rename = "ini")]
-    Ini,
-
-    #[serde(rename = "java")]
-    Java,
-
-    #[serde(rename = "javascript")]
-    JavaScript,
-
-    #[serde(rename = "javascriptreact")]
-    JavaScriptReact,
-
-    #[serde(rename = "json")]
-    Json,
-
-    #[serde(rename = "latex")]
-    LaTeX,
-
-    #[serde(rename = "less")]
-    Less,
-
-    #[serde(rename = "lua")]
-    Lua,
-
-    #[serde(rename = "makefile")]
-    Makefile,
-
-    #[serde(rename = "markdown")]
-    Markdown,
-
-    #[serde(rename = "objective-c")]
-    ObjectiveC,
-
-    #[serde(rename = "objective-cpp")]
-    ObjectiveCpp,
-
-    /// @since 3.18.0
-    /// @proposed
-    #[cfg(feature = "proposed")]
-    #[serde(rename = "pascal")]
-    Pascal,
-
-    #[serde(rename = "perl")]
-    Perl,
-
-    #[serde(rename = "perl6")]
-    Perl6,
-
-    #[serde(rename = "php")]
-    Php,
-
-    #[serde(rename = "powershell")]
-    Powershell,
-
-    #[serde(rename = "jade")]
-    Pug,
-
-    #[serde(rename = "python")]
-    Python,
-
-    #[serde(rename = "r")]
-    R,
-
-    #[serde(rename = "razor")]
-    Razor,
-
-    #[serde(rename = "ruby")]
-    Ruby,
-
-    #[serde(rename = "rust")]
-    Rust,
-
-    #[serde(rename = "scss")]
-    Scss,
-
-    #[serde(rename = "sass")]
-    Sass,
-
-    #[serde(rename = "scala")]
-    Scala,
-
-    #[serde(rename = "shaderlab")]
-    ShaderLab,
-
-    #[serde(rename = "shellscript")]
-    ShellScript,
-
-    #[serde(rename = "sql")]
-    Sql,
-
-    #[serde(rename = "swift")]
-    Swift,
-
-    #[serde(rename = "typescript")]
-    TypeScript,
-
-    #[serde(rename = "typescriptreact")]
-    TypeScriptReact,
-
-    #[serde(rename = "tex")]
-    TeX,
-
-    #[serde(rename = "vb")]
-    VisualBasic,
-
-    #[serde(rename = "xml")]
-    Xml,
-
-    #[serde(rename = "xsl")]
-    Xsl,
-
-    #[serde(rename = "yaml")]
-    Yaml,
+pub struct LanguageKind(std::borrow::Cow<'static, str>);
+impl LanguageKind {
+    pub const ABAP: Self = Self(std::borrow::Cow::Borrowed("abap"));
+    pub const WINDOWS_BAT: Self = Self(std::borrow::Cow::Borrowed("bat"));
+    pub const BIB_TE_X: Self = Self(std::borrow::Cow::Borrowed("bibtex"));
+    pub const CLOJURE: Self = Self(std::borrow::Cow::Borrowed("clojure"));
+    pub const COFFEESCRIPT: Self = Self(std::borrow::Cow::Borrowed("coffeescript"));
+    pub const C: Self = Self(std::borrow::Cow::Borrowed("c"));
+    pub const CPP: Self = Self(std::borrow::Cow::Borrowed("cpp"));
+    pub const CSHARP: Self = Self(std::borrow::Cow::Borrowed("csharp"));
+    pub const CSS: Self = Self(std::borrow::Cow::Borrowed("css"));
+    pub const D: Self = Self(std::borrow::Cow::Borrowed("d"));
+    pub const DELPHI: Self = Self(std::borrow::Cow::Borrowed("pascal"));
+    pub const DIFF: Self = Self(std::borrow::Cow::Borrowed("diff"));
+    pub const DART: Self = Self(std::borrow::Cow::Borrowed("dart"));
+    pub const DOCKERFILE: Self = Self(std::borrow::Cow::Borrowed("dockerfile"));
+    pub const ELIXIR: Self = Self(std::borrow::Cow::Borrowed("elixir"));
+    pub const ERLANG: Self = Self(std::borrow::Cow::Borrowed("erlang"));
+    pub const FSHARP: Self = Self(std::borrow::Cow::Borrowed("fsharp"));
+    pub const GIT_COMMIT: Self = Self(std::borrow::Cow::Borrowed("git-commit"));
+    pub const GIT_REBASE: Self = Self(std::borrow::Cow::Borrowed("rebase"));
+    pub const GO: Self = Self(std::borrow::Cow::Borrowed("go"));
+    pub const GROOVY: Self = Self(std::borrow::Cow::Borrowed("groovy"));
+    pub const HANDLEBARS: Self = Self(std::borrow::Cow::Borrowed("handlebars"));
+    pub const HASKELL: Self = Self(std::borrow::Cow::Borrowed("haskell"));
+    pub const HTML: Self = Self(std::borrow::Cow::Borrowed("html"));
+    pub const INI: Self = Self(std::borrow::Cow::Borrowed("ini"));
+    pub const JAVA: Self = Self(std::borrow::Cow::Borrowed("java"));
+    pub const JAVA_SCRIPT: Self = Self(std::borrow::Cow::Borrowed("javascript"));
+    pub const JAVA_SCRIPT_REACT: Self = Self(std::borrow::Cow::Borrowed("javascriptreact"));
+    pub const JSON: Self = Self(std::borrow::Cow::Borrowed("json"));
+    pub const LA_TE_X: Self = Self(std::borrow::Cow::Borrowed("latex"));
+    pub const LESS: Self = Self(std::borrow::Cow::Borrowed("less"));
+    pub const LUA: Self = Self(std::borrow::Cow::Borrowed("lua"));
+    pub const MAKEFILE: Self = Self(std::borrow::Cow::Borrowed("makefile"));
+    pub const MARKDOWN: Self = Self(std::borrow::Cow::Borrowed("markdown"));
+    pub const OBJECTIVE_C: Self = Self(std::borrow::Cow::Borrowed("objective-c"));
+    pub const OBJECTIVE_CPP: Self = Self(std::borrow::Cow::Borrowed("objective-cpp"));
+    pub const PASCAL: Self = Self(std::borrow::Cow::Borrowed("pascal"));
+    pub const PERL: Self = Self(std::borrow::Cow::Borrowed("perl"));
+    pub const PERL6: Self = Self(std::borrow::Cow::Borrowed("perl6"));
+    pub const PHP: Self = Self(std::borrow::Cow::Borrowed("php"));
+    pub const POWERSHELL: Self = Self(std::borrow::Cow::Borrowed("powershell"));
+    pub const PUG: Self = Self(std::borrow::Cow::Borrowed("jade"));
+    pub const PYTHON: Self = Self(std::borrow::Cow::Borrowed("python"));
+    pub const R: Self = Self(std::borrow::Cow::Borrowed("r"));
+    pub const RAZOR: Self = Self(std::borrow::Cow::Borrowed("razor"));
+    pub const RUBY: Self = Self(std::borrow::Cow::Borrowed("ruby"));
+    pub const RUST: Self = Self(std::borrow::Cow::Borrowed("rust"));
+    pub const SCSS: Self = Self(std::borrow::Cow::Borrowed("scss"));
+    pub const SASS: Self = Self(std::borrow::Cow::Borrowed("sass"));
+    pub const SCALA: Self = Self(std::borrow::Cow::Borrowed("scala"));
+    pub const SHADER_LAB: Self = Self(std::borrow::Cow::Borrowed("shaderlab"));
+    pub const SHELL_SCRIPT: Self = Self(std::borrow::Cow::Borrowed("shellscript"));
+    pub const SQL: Self = Self(std::borrow::Cow::Borrowed("sql"));
+    pub const SWIFT: Self = Self(std::borrow::Cow::Borrowed("swift"));
+    pub const TYPE_SCRIPT: Self = Self(std::borrow::Cow::Borrowed("typescript"));
+    pub const TYPE_SCRIPT_REACT: Self = Self(std::borrow::Cow::Borrowed("typescriptreact"));
+    pub const TE_X: Self = Self(std::borrow::Cow::Borrowed("tex"));
+    pub const VISUAL_BASIC: Self = Self(std::borrow::Cow::Borrowed("vb"));
+    pub const XML: Self = Self(std::borrow::Cow::Borrowed("xml"));
+    pub const XSL: Self = Self(std::borrow::Cow::Borrowed("xsl"));
+    pub const YAML: Self = Self(std::borrow::Cow::Borrowed("yaml"));
 }
 
 /// Describes how an [inline completion provider][InlineCompletionItemProvider] was triggered.
@@ -1665,25 +1274,11 @@ impl<'de> Deserialize<'de> for InlineCompletionTriggerKind {
 ///
 /// @since 3.17.0
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-pub enum PositionEncodingKind {
-    /// Character offsets count UTF-8 code units (e.g. bytes).
-    #[serde(rename = "utf-8")]
-    Utf8,
-
-    /// Character offsets count UTF-16 code units.
-    ///
-    /// This is the default and must always be supported
-    /// by servers
-    #[serde(rename = "utf-16")]
-    Utf16,
-
-    /// Character offsets count UTF-32 code units.
-    ///
-    /// Implementation note: these are the same as Unicode codepoints,
-    /// so this `PositionEncodingKind` may also be used for an
-    /// encoding-agnostic representation of character offsets.
-    #[serde(rename = "utf-32")]
-    Utf32,
+pub struct PositionEncodingKind(std::borrow::Cow<'static, str>);
+impl PositionEncodingKind {
+    pub const UTF8: Self = Self(std::borrow::Cow::Borrowed("utf-8"));
+    pub const UTF16: Self = Self(std::borrow::Cow::Borrowed("utf-16"));
+    pub const UTF32: Self = Self(std::borrow::Cow::Borrowed("utf-32"));
 }
 
 /// The file event type
@@ -1725,42 +1320,12 @@ impl<'de> Deserialize<'de> for FileChangeType {
     }
 }
 
-#[derive(PartialEq, Debug, Eq, Clone)]
-pub enum WatchKind {
-    /// Interested in create events.
-    Create = 1,
-
-    /// Interested in change events
-    Change = 2,
-
-    /// Interested in delete events
-    Delete = 4,
-}
-impl Serialize for WatchKind {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        match self {
-            WatchKind::Create => serializer.serialize_i32(1),
-            WatchKind::Change => serializer.serialize_i32(2),
-            WatchKind::Delete => serializer.serialize_i32(4),
-        }
-    }
-}
-impl<'de> Deserialize<'de> for WatchKind {
-    fn deserialize<D>(deserializer: D) -> Result<WatchKind, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        let value = i32::deserialize(deserializer)?;
-        match value {
-            1 => Ok(WatchKind::Create),
-            2 => Ok(WatchKind::Change),
-            4 => Ok(WatchKind::Delete),
-            _ => Err(serde::de::Error::custom("Unexpected value")),
-        }
-    }
+#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
+pub struct WatchKind(u32);
+impl WatchKind {
+    pub const CREATE: Self = Self(1);
+    pub const CHANGE: Self = Self(2);
+    pub const DELETE: Self = Self(4);
 }
 
 /// The diagnostic's severity.
@@ -2552,7 +2117,7 @@ pub struct FoldingRange {
     /// Describes the kind of the folding range such as 'comment' or 'region'. The kind
     /// is used to categorize folding ranges and used by commands like 'Fold all comments'.
     /// See [FoldingRangeKind] for an enumeration of standardized kinds.
-    pub kind: Option<CustomStringEnum<FoldingRangeKind>>,
+    pub kind: Option<FoldingRangeKind>,
 
     /// The zero-based character offset from where the folded range starts. If not defined, defaults to the length of the start line.
     pub start_character: Option<u32>,
@@ -4424,7 +3989,7 @@ pub struct CodeAction {
     /// The kind of the code action.
     ///
     /// Used to filter code actions.
-    pub kind: Option<CustomStringEnum<CodeActionKind>>,
+    pub kind: Option<CodeActionKind>,
 
     /// Tags for this code action.
     ///
@@ -5613,7 +5178,7 @@ pub struct NotebookDocument {
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct TextDocumentItem {
     /// The text document's language identifier.
-    pub language_id: CustomStringEnum<LanguageKind>,
+    pub language_id: LanguageKind,
 
     /// The content of the opened text document.
     pub text: String,
@@ -5960,7 +5525,7 @@ pub struct ServerCapabilities {
     /// If omitted it defaults to 'utf-16'.
     ///
     /// @since 3.17.0
-    pub position_encoding: Option<CustomStringEnum<PositionEncodingKind>>,
+    pub position_encoding: Option<PositionEncodingKind>,
 
     /// The server provides find references support.
     pub references_provider: Option<OR2<bool, ReferenceOptions>>,
@@ -6061,7 +5626,7 @@ pub struct FileSystemWatcher {
     /// The kind of events of interest. If omitted it defaults
     /// to WatchKind.Create | WatchKind.Change | WatchKind.Delete
     /// which is 7.
-    pub kind: Option<CustomIntEnum<WatchKind>>,
+    pub kind: Option<WatchKind>,
 }
 
 /// Represents a diagnostic, such as a compiler error or warning. Diagnostic objects
@@ -6467,7 +6032,7 @@ pub struct CodeActionContext {
     ///
     /// Actions not of this kind are filtered out by the client before being shown. So servers
     /// can omit computing them.
-    pub only: Option<Vec<CustomStringEnum<CodeActionKind>>>,
+    pub only: Option<Vec<CodeActionKind>>,
 
     /// The reason why code actions were requested.
     ///
@@ -6498,7 +6063,7 @@ pub struct CodeActionOptions {
     ///
     /// The list of kinds may be generic, such as `CodeActionKind.Refactor`, or the server
     /// may list out every specific kind they provide.
-    pub code_action_kinds: Option<Vec<CustomStringEnum<CodeActionKind>>>,
+    pub code_action_kinds: Option<Vec<CodeActionKind>>,
 
     /// Static documentation for a class of code actions.
     ///
@@ -7157,7 +6722,7 @@ pub struct CodeActionKindDocumentation {
     /// If the kind is generic, such as `CodeActionKind.Refactor`, the documentation will be shown whenever any
     /// refactorings are returned. If the kind if more specific, such as `CodeActionKind.RefactorExtract`, the
     /// documentation will only be shown when extract refactoring code actions are returned.
-    pub kind: CustomStringEnum<CodeActionKind>,
+    pub kind: CodeActionKind,
 }
 
 /// A notebook cell text document filter denotes a cell text
@@ -7523,7 +7088,7 @@ pub struct GeneralClientCapabilities {
     /// side.
     ///
     /// @since 3.17.0
-    pub position_encodings: Option<Vec<CustomStringEnum<PositionEncodingKind>>>,
+    pub position_encodings: Option<Vec<PositionEncodingKind>>,
 
     /// Client capabilities specific to regular expressions.
     ///
@@ -8813,7 +8378,7 @@ pub struct ClientFoldingRangeKindOptions {
     /// property exists the client also guarantees that it will
     /// handle values outside its set gracefully and falls back
     /// to a default value when unknown.
-    pub value_set: Option<Vec<CustomStringEnum<FoldingRangeKind>>>,
+    pub value_set: Option<Vec<FoldingRangeKind>>,
 }
 
 /// @since 3.18.0
@@ -8926,7 +8491,7 @@ pub struct ClientCodeActionKindOptions {
     /// property exists the client also guarantees that it will
     /// handle values outside its set gracefully and falls back
     /// to a default value when unknown.
-    pub value_set: Vec<CustomStringEnum<CodeActionKind>>,
+    pub value_set: Vec<CodeActionKind>,
 }
 
 /// @since 3.18.0

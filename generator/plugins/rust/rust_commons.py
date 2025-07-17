@@ -84,38 +84,6 @@ DEFAULT_NOTIFICATIONS_CONTENTS = [
 ]
 def generate_custom_enum(type_data: TypeData) -> None:
     type_data.add_type_info(
-        model.ReferenceType(kind="reference", name="CustomStringEnum"),
-        "CustomStringEnum",
-        [
-            "/// This type allows extending any string enum to support custom values.",
-            "#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]",
-            "#[serde(untagged)]",
-            "pub enum CustomStringEnum<T> {",
-            "    /// The value is one of the known enum values.",
-            "    Known(T),",
-            "    /// The value is custom.",
-            "    Custom(String),",
-            "}",
-            "",
-        ],
-    )
-    type_data.add_type_info(
-        model.ReferenceType(kind="reference", name="CustomIntEnum"),
-        "CustomIntEnum",
-        [
-            "/// This type allows extending any integer enum to support custom values.",
-            "#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]",
-            "#[serde(untagged)]",
-            "pub enum CustomIntEnum<T> {",
-            "    /// The value is one of the known enum values.",
-            "    Known(T),",
-            "    /// The value is custom.",
-            "    Custom(i32),",
-            "}",
-            "",
-        ],
-    )
-    type_data.add_type_info(
         model.ReferenceType(kind="reference", name="OR2"),
         "OR2",
         [
@@ -435,14 +403,7 @@ def get_type_name(
     name_context: Optional[str] = None,
 ) -> str:
     if type_def.kind == "reference":
-        enum_def = _get_enum(type_def.name, spec)
-        if enum_def and enum_def.supportsCustomValues:
-            if _is_str_enum(enum_def):
-                name = f"CustomStringEnum<{enum_def.name}>"
-            elif _is_int_enum(enum_def):
-                name = f"CustomIntEnum<{enum_def.name}>"
-        else:
-            name = type_def.name
+        name = type_def.name
     elif type_def.kind == "array":
         name = f"Vec<{get_type_name(type_def.element, types, spec)}>"
     elif type_def.kind == "map":
