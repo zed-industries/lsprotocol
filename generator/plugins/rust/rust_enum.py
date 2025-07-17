@@ -71,7 +71,10 @@ def generate_enum(enum: model.Enum, types: TypeData) -> None:
         lines += [f"impl {enum.name} {{"]
         for item in enum.values:
             value = f"std::borrow::Cow::Borrowed(\"{item.value}\")" if enum.type.name == "string" else item.value
-            lines += [f"    pub const {to_snake_case(item.name).upper()}: Self = Self({value});"]
+            field = [f"    pub const {to_snake_case(item.name).upper()}: Self = Self({value});"]
+            lines += indent_lines(
+                _get_enum_docs(item) + generate_extras(item) + field + [""]
+            )
         lines += ["}"]
 
 

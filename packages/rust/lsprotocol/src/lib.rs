@@ -332,28 +332,55 @@ pub enum MessageDirection {
 pub struct SemanticTokenTypes(std::borrow::Cow<'static, str>);
 impl SemanticTokenTypes {
     pub const NAMESPACE: Self = Self(std::borrow::Cow::Borrowed("namespace"));
+
+    /// Represents a generic type. Acts as a fallback for types which can't be mapped to
+    /// a specific type like class or enum.
     pub const TYPE: Self = Self(std::borrow::Cow::Borrowed("type"));
+
     pub const CLASS: Self = Self(std::borrow::Cow::Borrowed("class"));
+
     pub const ENUM: Self = Self(std::borrow::Cow::Borrowed("enum"));
+
     pub const INTERFACE: Self = Self(std::borrow::Cow::Borrowed("interface"));
+
     pub const STRUCT: Self = Self(std::borrow::Cow::Borrowed("struct"));
+
     pub const TYPE_PARAMETER: Self = Self(std::borrow::Cow::Borrowed("typeParameter"));
+
     pub const PARAMETER: Self = Self(std::borrow::Cow::Borrowed("parameter"));
+
     pub const VARIABLE: Self = Self(std::borrow::Cow::Borrowed("variable"));
+
     pub const PROPERTY: Self = Self(std::borrow::Cow::Borrowed("property"));
+
     pub const ENUM_MEMBER: Self = Self(std::borrow::Cow::Borrowed("enumMember"));
+
     pub const EVENT: Self = Self(std::borrow::Cow::Borrowed("event"));
+
     pub const FUNCTION: Self = Self(std::borrow::Cow::Borrowed("function"));
+
     pub const METHOD: Self = Self(std::borrow::Cow::Borrowed("method"));
+
     pub const MACRO: Self = Self(std::borrow::Cow::Borrowed("macro"));
+
     pub const KEYWORD: Self = Self(std::borrow::Cow::Borrowed("keyword"));
+
     pub const MODIFIER: Self = Self(std::borrow::Cow::Borrowed("modifier"));
+
     pub const COMMENT: Self = Self(std::borrow::Cow::Borrowed("comment"));
+
     pub const STRING: Self = Self(std::borrow::Cow::Borrowed("string"));
+
     pub const NUMBER: Self = Self(std::borrow::Cow::Borrowed("number"));
+
     pub const REGEXP: Self = Self(std::borrow::Cow::Borrowed("regexp"));
+
     pub const OPERATOR: Self = Self(std::borrow::Cow::Borrowed("operator"));
+
+    /// @since 3.17.0
     pub const DECORATOR: Self = Self(std::borrow::Cow::Borrowed("decorator"));
+
+    /// @since 3.18.0
     pub const LABEL: Self = Self(std::borrow::Cow::Borrowed("label"));
 }
 
@@ -366,14 +393,23 @@ impl SemanticTokenTypes {
 pub struct SemanticTokenModifiers(std::borrow::Cow<'static, str>);
 impl SemanticTokenModifiers {
     pub const DECLARATION: Self = Self(std::borrow::Cow::Borrowed("declaration"));
+
     pub const DEFINITION: Self = Self(std::borrow::Cow::Borrowed("definition"));
+
     pub const READONLY: Self = Self(std::borrow::Cow::Borrowed("readonly"));
+
     pub const STATIC: Self = Self(std::borrow::Cow::Borrowed("static"));
+
     pub const DEPRECATED: Self = Self(std::borrow::Cow::Borrowed("deprecated"));
+
     pub const ABSTRACT: Self = Self(std::borrow::Cow::Borrowed("abstract"));
+
     pub const ASYNC: Self = Self(std::borrow::Cow::Borrowed("async"));
+
     pub const MODIFICATION: Self = Self(std::borrow::Cow::Borrowed("modification"));
+
     pub const DOCUMENTATION: Self = Self(std::borrow::Cow::Borrowed("documentation"));
+
     pub const DEFAULT_LIBRARY: Self = Self(std::borrow::Cow::Borrowed("defaultLibrary"));
 }
 
@@ -398,20 +434,52 @@ pub enum DocumentDiagnosticReportKind {
 pub struct ErrorCodes(i32);
 impl ErrorCodes {
     pub const PARSE_ERROR: Self = Self(-32700);
+
     pub const INVALID_REQUEST: Self = Self(-32600);
+
     pub const METHOD_NOT_FOUND: Self = Self(-32601);
+
     pub const INVALID_PARAMS: Self = Self(-32602);
+
     pub const INTERNAL_ERROR: Self = Self(-32603);
+
+    /// Error code indicating that a server received a notification or
+    /// request before the server has received the `initialize` request.
     pub const SERVER_NOT_INITIALIZED: Self = Self(-32002);
+
     pub const UNKNOWN_ERROR_CODE: Self = Self(-32001);
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 pub struct LSPErrorCodes(i32);
 impl LSPErrorCodes {
+    /// A request failed but it was syntactically correct, e.g the
+    /// method name was known and the parameters were valid. The error
+    /// message should contain human readable information about why
+    /// the request failed.
+    ///
+    /// @since 3.17.0
     pub const REQUEST_FAILED: Self = Self(-32803);
+
+    /// The server cancelled the request. This error code should
+    /// only be used for requests that explicitly support being
+    /// server cancellable.
+    ///
+    /// @since 3.17.0
     pub const SERVER_CANCELLED: Self = Self(-32802);
+
+    /// The server detected that the content of a document got
+    /// modified outside normal conditions. A server should
+    /// NOT send this error code if it detects a content change
+    /// in it unprocessed messages. The result even computed
+    /// on an older state might still be useful for the client.
+    ///
+    /// If a client decides that a result is not of any use anymore
+    /// the client should cancel the request.
     pub const CONTENT_MODIFIED: Self = Self(-32801);
+
+    /// The client has canceled a request and a server has detected
+    /// the cancel.
     pub const REQUEST_CANCELLED: Self = Self(-32800);
 }
 
@@ -419,8 +487,13 @@ impl LSPErrorCodes {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 pub struct FoldingRangeKind(std::borrow::Cow<'static, str>);
 impl FoldingRangeKind {
+    /// Folding range for a comment
     pub const COMMENT: Self = Self(std::borrow::Cow::Borrowed("comment"));
+
+    /// Folding range for an import or include
     pub const IMPORTS: Self = Self(std::borrow::Cow::Borrowed("imports"));
+
+    /// Folding range for a region (e.g. `#region`)
     pub const REGION: Self = Self(std::borrow::Cow::Borrowed("region"));
 }
 
@@ -1088,17 +1161,83 @@ impl<'de> Deserialize<'de> for DocumentHighlightKind {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 pub struct CodeActionKind(std::borrow::Cow<'static, str>);
 impl CodeActionKind {
+    /// Empty kind.
     pub const EMPTY: Self = Self(std::borrow::Cow::Borrowed(""));
+
+    /// Base kind for quickfix actions: 'quickfix'
     pub const QUICK_FIX: Self = Self(std::borrow::Cow::Borrowed("quickfix"));
+
+    /// Base kind for refactoring actions: 'refactor'
     pub const REFACTOR: Self = Self(std::borrow::Cow::Borrowed("refactor"));
+
+    /// Base kind for refactoring extraction actions: 'refactor.extract'
+    ///
+    /// Example extract actions:
+    ///
+    /// - Extract method
+    /// - Extract function
+    /// - Extract variable
+    /// - Extract interface from class
+    /// - ...
     pub const REFACTOR_EXTRACT: Self = Self(std::borrow::Cow::Borrowed("refactor.extract"));
+
+    /// Base kind for refactoring inline actions: 'refactor.inline'
+    ///
+    /// Example inline actions:
+    ///
+    /// - Inline function
+    /// - Inline variable
+    /// - Inline constant
+    /// - ...
     pub const REFACTOR_INLINE: Self = Self(std::borrow::Cow::Borrowed("refactor.inline"));
+
+    /// Base kind for refactoring move actions: `refactor.move`
+    ///
+    /// Example move actions:
+    ///
+    /// - Move a function to a new file
+    /// - Move a property between classes
+    /// - Move method to base class
+    /// - ...
+    ///
+    /// @since 3.18.0
+    /// @proposed
+    #[cfg(feature = "proposed")]
     pub const REFACTOR_MOVE: Self = Self(std::borrow::Cow::Borrowed("refactor.move"));
+
+    /// Base kind for refactoring rewrite actions: 'refactor.rewrite'
+    ///
+    /// Example rewrite actions:
+    ///
+    /// - Convert JavaScript function to class
+    /// - Add or remove parameter
+    /// - Encapsulate field
+    /// - Make method static
+    /// - Move method to base class
+    /// - ...
     pub const REFACTOR_REWRITE: Self = Self(std::borrow::Cow::Borrowed("refactor.rewrite"));
+
+    /// Base kind for source actions: `source`
+    ///
+    /// Source code actions apply to the entire file.
     pub const SOURCE: Self = Self(std::borrow::Cow::Borrowed("source"));
+
+    /// Base kind for an organize imports source action: `source.organizeImports`
     pub const SOURCE_ORGANIZE_IMPORTS: Self =
         Self(std::borrow::Cow::Borrowed("source.organizeImports"));
+
+    /// Base kind for auto-fix source actions: `source.fixAll`.
+    ///
+    /// Fix all actions automatically fix errors that have a clear fix that do not require user input.
+    /// They should not suppress errors or perform unsafe fixes such as generating new types or classes.
+    ///
+    /// @since 3.15.0
     pub const SOURCE_FIX_ALL: Self = Self(std::borrow::Cow::Borrowed("source.fixAll"));
+
+    /// Base kind for all code actions applying to the entire notebook's scope. CodeActionKinds using
+    /// this should always begin with `notebook.`
+    ///
+    /// @since 3.18.0
     pub const NOTEBOOK: Self = Self(std::borrow::Cow::Borrowed("notebook"));
 }
 
@@ -1170,65 +1309,134 @@ pub enum MarkupKind {
 pub struct LanguageKind(std::borrow::Cow<'static, str>);
 impl LanguageKind {
     pub const ABAP: Self = Self(std::borrow::Cow::Borrowed("abap"));
+
     pub const WINDOWS_BAT: Self = Self(std::borrow::Cow::Borrowed("bat"));
+
     pub const BIB_TE_X: Self = Self(std::borrow::Cow::Borrowed("bibtex"));
+
     pub const CLOJURE: Self = Self(std::borrow::Cow::Borrowed("clojure"));
+
     pub const COFFEESCRIPT: Self = Self(std::borrow::Cow::Borrowed("coffeescript"));
+
     pub const C: Self = Self(std::borrow::Cow::Borrowed("c"));
+
     pub const CPP: Self = Self(std::borrow::Cow::Borrowed("cpp"));
+
     pub const CSHARP: Self = Self(std::borrow::Cow::Borrowed("csharp"));
+
     pub const CSS: Self = Self(std::borrow::Cow::Borrowed("css"));
+
+    /// @since 3.18.0
+    /// @proposed
+    #[cfg(feature = "proposed")]
     pub const D: Self = Self(std::borrow::Cow::Borrowed("d"));
+
+    /// @since 3.18.0
+    /// @proposed
+    #[cfg(feature = "proposed")]
     pub const DELPHI: Self = Self(std::borrow::Cow::Borrowed("pascal"));
+
     pub const DIFF: Self = Self(std::borrow::Cow::Borrowed("diff"));
+
     pub const DART: Self = Self(std::borrow::Cow::Borrowed("dart"));
+
     pub const DOCKERFILE: Self = Self(std::borrow::Cow::Borrowed("dockerfile"));
+
     pub const ELIXIR: Self = Self(std::borrow::Cow::Borrowed("elixir"));
+
     pub const ERLANG: Self = Self(std::borrow::Cow::Borrowed("erlang"));
+
     pub const FSHARP: Self = Self(std::borrow::Cow::Borrowed("fsharp"));
+
     pub const GIT_COMMIT: Self = Self(std::borrow::Cow::Borrowed("git-commit"));
+
     pub const GIT_REBASE: Self = Self(std::borrow::Cow::Borrowed("rebase"));
+
     pub const GO: Self = Self(std::borrow::Cow::Borrowed("go"));
+
     pub const GROOVY: Self = Self(std::borrow::Cow::Borrowed("groovy"));
+
     pub const HANDLEBARS: Self = Self(std::borrow::Cow::Borrowed("handlebars"));
+
     pub const HASKELL: Self = Self(std::borrow::Cow::Borrowed("haskell"));
+
     pub const HTML: Self = Self(std::borrow::Cow::Borrowed("html"));
+
     pub const INI: Self = Self(std::borrow::Cow::Borrowed("ini"));
+
     pub const JAVA: Self = Self(std::borrow::Cow::Borrowed("java"));
+
     pub const JAVA_SCRIPT: Self = Self(std::borrow::Cow::Borrowed("javascript"));
+
     pub const JAVA_SCRIPT_REACT: Self = Self(std::borrow::Cow::Borrowed("javascriptreact"));
+
     pub const JSON: Self = Self(std::borrow::Cow::Borrowed("json"));
+
     pub const LA_TE_X: Self = Self(std::borrow::Cow::Borrowed("latex"));
+
     pub const LESS: Self = Self(std::borrow::Cow::Borrowed("less"));
+
     pub const LUA: Self = Self(std::borrow::Cow::Borrowed("lua"));
+
     pub const MAKEFILE: Self = Self(std::borrow::Cow::Borrowed("makefile"));
+
     pub const MARKDOWN: Self = Self(std::borrow::Cow::Borrowed("markdown"));
+
     pub const OBJECTIVE_C: Self = Self(std::borrow::Cow::Borrowed("objective-c"));
+
     pub const OBJECTIVE_CPP: Self = Self(std::borrow::Cow::Borrowed("objective-cpp"));
+
+    /// @since 3.18.0
+    /// @proposed
+    #[cfg(feature = "proposed")]
     pub const PASCAL: Self = Self(std::borrow::Cow::Borrowed("pascal"));
+
     pub const PERL: Self = Self(std::borrow::Cow::Borrowed("perl"));
+
     pub const PERL6: Self = Self(std::borrow::Cow::Borrowed("perl6"));
+
     pub const PHP: Self = Self(std::borrow::Cow::Borrowed("php"));
+
     pub const POWERSHELL: Self = Self(std::borrow::Cow::Borrowed("powershell"));
+
     pub const PUG: Self = Self(std::borrow::Cow::Borrowed("jade"));
+
     pub const PYTHON: Self = Self(std::borrow::Cow::Borrowed("python"));
+
     pub const R: Self = Self(std::borrow::Cow::Borrowed("r"));
+
     pub const RAZOR: Self = Self(std::borrow::Cow::Borrowed("razor"));
+
     pub const RUBY: Self = Self(std::borrow::Cow::Borrowed("ruby"));
+
     pub const RUST: Self = Self(std::borrow::Cow::Borrowed("rust"));
+
     pub const SCSS: Self = Self(std::borrow::Cow::Borrowed("scss"));
+
     pub const SASS: Self = Self(std::borrow::Cow::Borrowed("sass"));
+
     pub const SCALA: Self = Self(std::borrow::Cow::Borrowed("scala"));
+
     pub const SHADER_LAB: Self = Self(std::borrow::Cow::Borrowed("shaderlab"));
+
     pub const SHELL_SCRIPT: Self = Self(std::borrow::Cow::Borrowed("shellscript"));
+
     pub const SQL: Self = Self(std::borrow::Cow::Borrowed("sql"));
+
     pub const SWIFT: Self = Self(std::borrow::Cow::Borrowed("swift"));
+
     pub const TYPE_SCRIPT: Self = Self(std::borrow::Cow::Borrowed("typescript"));
+
     pub const TYPE_SCRIPT_REACT: Self = Self(std::borrow::Cow::Borrowed("typescriptreact"));
+
     pub const TE_X: Self = Self(std::borrow::Cow::Borrowed("tex"));
+
     pub const VISUAL_BASIC: Self = Self(std::borrow::Cow::Borrowed("vb"));
+
     pub const XML: Self = Self(std::borrow::Cow::Borrowed("xml"));
+
     pub const XSL: Self = Self(std::borrow::Cow::Borrowed("xsl"));
+
     pub const YAML: Self = Self(std::borrow::Cow::Borrowed("yaml"));
 }
 
@@ -1276,8 +1484,20 @@ impl<'de> Deserialize<'de> for InlineCompletionTriggerKind {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 pub struct PositionEncodingKind(std::borrow::Cow<'static, str>);
 impl PositionEncodingKind {
+    /// Character offsets count UTF-8 code units (e.g. bytes).
     pub const UTF8: Self = Self(std::borrow::Cow::Borrowed("utf-8"));
+
+    /// Character offsets count UTF-16 code units.
+    ///
+    /// This is the default and must always be supported
+    /// by servers
     pub const UTF16: Self = Self(std::borrow::Cow::Borrowed("utf-16"));
+
+    /// Character offsets count UTF-32 code units.
+    ///
+    /// Implementation note: these are the same as Unicode codepoints,
+    /// so this `PositionEncodingKind` may also be used for an
+    /// encoding-agnostic representation of character offsets.
     pub const UTF32: Self = Self(std::borrow::Cow::Borrowed("utf-32"));
 }
 
@@ -1323,8 +1543,13 @@ impl<'de> Deserialize<'de> for FileChangeType {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 pub struct WatchKind(u32);
 impl WatchKind {
+    /// Interested in create events.
     pub const CREATE: Self = Self(1);
+
+    /// Interested in change events
     pub const CHANGE: Self = Self(2);
+
+    /// Interested in delete events
     pub const DELETE: Self = Self(4);
 }
 
