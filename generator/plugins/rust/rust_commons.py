@@ -60,10 +60,16 @@ class TypeData:
     def get_by_name(self, type_name: str) -> List[TypesWithId]:
         return [type_name == name for name, _, _ in self._id_data.values()]
 
-    def get_lines(self):
-        lines = []
-        for _, _, impl in self._id_data.values():
-            lines += impl + ["", ""]
+    def get_lines(self) -> Dict[str, List[str]]:
+        lines: Dict[str, List[str]] = {}
+        for _, kind, impl in self._id_data.values():
+            if isinstance(kind, model.Request):
+                lines.setdefault("requests.rs", ["use crate::*;"]).extend(impl + ["", ""])
+            elif isinstance(kind, model.Notification):
+                lines.setdefault("notifications.rs", ["use crate::*;"]).extend(impl + ["", ""])
+            else:
+                lines.setdefault("lib.rs", ["pub mod notifications;", "pub mod requests;"]).extend(impl + ["", ""])
+
         return lines
 
 

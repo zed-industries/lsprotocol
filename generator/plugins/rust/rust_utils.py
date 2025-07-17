@@ -17,6 +17,7 @@ from .rust_structs import (
     generate_type_aliases,
 )
 from .rust_tests import generate_test_code
+from typing import Dict
 
 PACKAGE_DIR_NAME = "lsprotocol"
 
@@ -38,30 +39,28 @@ def generate_from_spec(spec: model.LSPModel, output_dir: str, test_dir: str) -> 
         generate_test_code(spec, test_path)
 
 
-def generate_package_code(spec: model.LSPModel) -> List[str]:
-    return {
-        "src/lib.rs": generate_lib_rs(spec),
-    }
+def generate_package_code(spec: model.LSPModel) -> Dict[str, str]:
+    code = generate_package(spec)
+    code = {f'src/{k}': "\n".join(PRELUDE +  v) for k, v in code.items()}
+    return code
 
 
-def generate_lib_rs(spec: model.LSPModel) -> List[str]:
-    lines = lines_to_comments(license_header())
-    lines += [
-        "",
-        "// ****** THIS IS A GENERATED FILE, DO NOT EDIT. ******",
-        "// Steps to generate:",
-        "// 1. Checkout https://github.com/microsoft/lsprotocol",
-        "// 2. Install nox: `python -m pip install nox`",
-        "// 3. Run command: `python -m nox --session build_lsp`",
-        "",
-    ]
-    lines += [
-        "use serde::{Serialize, Deserialize};",
-        "use std::collections::HashMap;",
-        "use url::Url;",
-        "use rust_decimal::Decimal;",
-    ]
+PRELUDE = lines_to_comments(license_header()) + [
+    "",
+    "// ****** THIS IS A GENERATED FILE, DO NOT EDIT. ******",
+    "// Steps to generate:",
+    "// 1. Checkout https://github.com/microsoft/lsprotocol",
+    "// 2. Install nox: `python -m pip install nox`",
+    "// 3. Run command: `python -m nox --session build_lsp`",
+    "",
+    "use serde::{Serialize, Deserialize};",
+    "use std::collections::HashMap;",
+    "use url::Url;",
+    "use rust_decimal::Decimal;",
+    ""
+]
 
+def generate_package(spec: model.LSPModel) -> Dict[str, List[str]]:
     type_data = TypeData()
     generate_commons(spec, type_data)
     generate_enums(spec.enumerations, type_data)
@@ -71,5 +70,4 @@ def generate_lib_rs(spec: model.LSPModel) -> List[str]:
     generate_notifications(spec, type_data)
     generate_requests(spec, type_data)
 
-    lines += type_data.get_lines()
-    return "\n".join(lines)
+    return type_data.get_lines()
