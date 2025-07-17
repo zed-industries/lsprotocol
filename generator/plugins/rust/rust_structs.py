@@ -312,12 +312,11 @@ def generate_notification(
     if notification_def.params:
         params_name = notification_def.params.name
     name = get_message_type_name(notification_def)
-    method_name =notification_def.method
 
-    lines = [
-        f"pub struct {name};",
-        "",
-        f"impl Notification for {name} {{"
+    lines = [f"pub struct {name};"]
+    lines += _get_doc(notification_def.documentation)
+    lines += generate_extras(notification_def)
+    lines += [f"impl Notification for {name} {{"
         f"    type Params = {params_name};",
         f"    const METHOD: &'static str = \"{fix_method(notification_def.method)}\";"
         "}"
