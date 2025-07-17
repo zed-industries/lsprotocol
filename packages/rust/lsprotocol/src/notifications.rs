@@ -13,378 +13,190 @@ use std::collections::HashMap;
 use url::Url;
 
 use crate::*;
-/// The `workspace/didChangeWorkspaceFolders` notification is sent from the client to the server when the workspace
-/// folder configuration changes.
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct DidChangeWorkspaceFoldersNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: DidChangeWorkspaceFoldersParams,
+pub trait Notification {
+    type Params: serde::de::DeserializeOwned + serde::Serialize + Send + Sync + 'static;
+    const METHOD: &'static str;
 }
 
-/// The `window/workDoneProgress/cancel` notification is sent from  the client to the server to cancel a progress
-/// initiated on the server side.
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct WorkDoneProgressCancelNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct WorkspaceDidChangeWorkspaceFoldersNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: WorkDoneProgressCancelParams,
+impl Notification for WorkspaceDidChangeWorkspaceFoldersNotification {
+    type Params = DidChangeWorkspaceFoldersParams;
+    const METHOD: &'static str = "WorkspaceDidChangeWorkspaceFolders";
 }
 
-/// The did create files notification is sent from the client to the server when
-/// files were created from within the client.
-///
-/// @since 3.16.0
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct DidCreateFilesNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct WindowWorkDoneProgressCancelNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: CreateFilesParams,
+impl Notification for WindowWorkDoneProgressCancelNotification {
+    type Params = WorkDoneProgressCancelParams;
+    const METHOD: &'static str = "WindowWorkDoneProgressCancel";
 }
 
-/// The did rename files notification is sent from the client to the server when
-/// files were renamed from within the client.
-///
-/// @since 3.16.0
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct DidRenameFilesNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct WorkspaceDidCreateFilesNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: RenameFilesParams,
+impl Notification for WorkspaceDidCreateFilesNotification {
+    type Params = CreateFilesParams;
+    const METHOD: &'static str = "WorkspaceDidCreateFiles";
 }
 
-/// The will delete files request is sent from the client to the server before files are actually
-/// deleted as long as the deletion is triggered from within the client.
-///
-/// @since 3.16.0
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct DidDeleteFilesNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct WorkspaceDidRenameFilesNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: DeleteFilesParams,
+impl Notification for WorkspaceDidRenameFilesNotification {
+    type Params = RenameFilesParams;
+    const METHOD: &'static str = "WorkspaceDidRenameFiles";
 }
 
-/// A notification sent when a notebook opens.
-///
-/// @since 3.17.0
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct DidOpenNotebookDocumentNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct WorkspaceDidDeleteFilesNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: DidOpenNotebookDocumentParams,
+impl Notification for WorkspaceDidDeleteFilesNotification {
+    type Params = DeleteFilesParams;
+    const METHOD: &'static str = "WorkspaceDidDeleteFiles";
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct DidChangeNotebookDocumentNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct NotebookDocumentDidOpenNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: DidChangeNotebookDocumentParams,
+impl Notification for NotebookDocumentDidOpenNotification {
+    type Params = DidOpenNotebookDocumentParams;
+    const METHOD: &'static str = "NotebookDocumentDidOpen";
 }
 
-/// A notification sent when a notebook document is saved.
-///
-/// @since 3.17.0
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct DidSaveNotebookDocumentNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct NotebookDocumentDidChangeNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: DidSaveNotebookDocumentParams,
+impl Notification for NotebookDocumentDidChangeNotification {
+    type Params = DidChangeNotebookDocumentParams;
+    const METHOD: &'static str = "NotebookDocumentDidChange";
 }
 
-/// A notification sent when a notebook closes.
-///
-/// @since 3.17.0
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct DidCloseNotebookDocumentNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct NotebookDocumentDidSaveNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: DidCloseNotebookDocumentParams,
+impl Notification for NotebookDocumentDidSaveNotification {
+    type Params = DidSaveNotebookDocumentParams;
+    const METHOD: &'static str = "NotebookDocumentDidSave";
 }
 
-/// The initialized notification is sent from the client to the
-/// server after the client is fully initialized and the server
-/// is allowed to send requests from the server to the client.
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct InitializedNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct NotebookDocumentDidCloseNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: Option<LSPAny>,
+impl Notification for NotebookDocumentDidCloseNotification {
+    type Params = DidCloseNotebookDocumentParams;
+    const METHOD: &'static str = "NotebookDocumentDidClose";
 }
 
-/// The exit event is sent from the client to the server to
-/// ask the server to exit its process.
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct ExitNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct InitializedNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: Option<()>,
+impl Notification for InitializedNotification {
+    type Params = InitializedParams;
+    const METHOD: &'static str = "Initialized";
 }
 
-/// The configuration change notification is sent from the client to the server
-/// when the client's configuration has changed. The notification contains
-/// the changed configuration as defined by the language client.
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct DidChangeConfigurationNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct ExitNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: DidChangeConfigurationParams,
+impl Notification for ExitNotification {
+    type Params = ();
+    const METHOD: &'static str = "Exit";
 }
 
-/// The show message notification is sent from a server to a client to ask
-/// the client to display a particular message in the user interface.
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct ShowMessageNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct WorkspaceDidChangeConfigurationNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: ShowMessageParams,
+impl Notification for WorkspaceDidChangeConfigurationNotification {
+    type Params = DidChangeConfigurationParams;
+    const METHOD: &'static str = "WorkspaceDidChangeConfiguration";
 }
 
-/// The log message notification is sent from the server to the client to ask
-/// the client to log a particular message.
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct LogMessageNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct WindowShowMessageNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: LogMessageParams,
+impl Notification for WindowShowMessageNotification {
+    type Params = ShowMessageParams;
+    const METHOD: &'static str = "WindowShowMessage";
 }
 
-/// The telemetry event notification is sent from the server to the client to ask
-/// the client to log telemetry data.
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct TelemetryEventNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct WindowLogMessageNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: Option<LSPAny>,
+impl Notification for WindowLogMessageNotification {
+    type Params = LogMessageParams;
+    const METHOD: &'static str = "WindowLogMessage";
 }
 
-/// The document open notification is sent from the client to the server to signal
-/// newly opened text documents. The document's truth is now managed by the client
-/// and the server must not try to read the document's truth using the document's
-/// uri. Open in this sense means it is managed by the client. It doesn't necessarily
-/// mean that its content is presented in an editor. An open notification must not
-/// be sent more than once without a corresponding close notification send before.
-/// This means open and close notification must be balanced and the max open count
-/// is one.
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct DidOpenTextDocumentNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct TelemetryEventNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: DidOpenTextDocumentParams,
+impl Notification for TelemetryEventNotification {
+    type Params = LSPAny;
+    const METHOD: &'static str = "TelemetryEvent";
 }
 
-/// The document change notification is sent from the client to the server to signal
-/// changes to a text document.
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct DidChangeTextDocumentNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct TextDocumentDidOpenNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: DidChangeTextDocumentParams,
+impl Notification for TextDocumentDidOpenNotification {
+    type Params = DidOpenTextDocumentParams;
+    const METHOD: &'static str = "TextDocumentDidOpen";
 }
 
-/// The document close notification is sent from the client to the server when
-/// the document got closed in the client. The document's truth now exists where
-/// the document's uri points to (e.g. if the document's uri is a file uri the
-/// truth now exists on disk). As with the open notification the close notification
-/// is about managing the document's content. Receiving a close notification
-/// doesn't mean that the document was open in an editor before. A close
-/// notification requires a previous open notification to be sent.
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct DidCloseTextDocumentNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct TextDocumentDidChangeNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: DidCloseTextDocumentParams,
+impl Notification for TextDocumentDidChangeNotification {
+    type Params = DidChangeTextDocumentParams;
+    const METHOD: &'static str = "TextDocumentDidChange";
 }
 
-/// The document save notification is sent from the client to the server when
-/// the document got saved in the client.
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct DidSaveTextDocumentNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct TextDocumentDidCloseNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: DidSaveTextDocumentParams,
+impl Notification for TextDocumentDidCloseNotification {
+    type Params = DidCloseTextDocumentParams;
+    const METHOD: &'static str = "TextDocumentDidClose";
 }
 
-/// A document will save notification is sent from the client to the server before
-/// the document is actually saved.
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct WillSaveTextDocumentNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct TextDocumentDidSaveNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: WillSaveTextDocumentParams,
+impl Notification for TextDocumentDidSaveNotification {
+    type Params = DidSaveTextDocumentParams;
+    const METHOD: &'static str = "TextDocumentDidSave";
 }
 
-/// The watched files notification is sent from the client to the server when
-/// the client detects changes to file watched by the language client.
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct DidChangeWatchedFilesNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct TextDocumentWillSaveNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: DidChangeWatchedFilesParams,
+impl Notification for TextDocumentWillSaveNotification {
+    type Params = WillSaveTextDocumentParams;
+    const METHOD: &'static str = "TextDocumentWillSave";
 }
 
-/// Diagnostics notification are sent from the server to the client to signal
-/// results of validation runs.
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct PublishDiagnosticsNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct WorkspaceDidChangeWatchedFilesNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: PublishDiagnosticsParams,
+impl Notification for WorkspaceDidChangeWatchedFilesNotification {
+    type Params = DidChangeWatchedFilesParams;
+    const METHOD: &'static str = "WorkspaceDidChangeWatchedFiles";
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct SetTraceNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct TextDocumentPublishDiagnosticsNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: SetTraceParams,
+impl Notification for TextDocumentPublishDiagnosticsNotification {
+    type Params = PublishDiagnosticsParams;
+    const METHOD: &'static str = "TextDocumentPublishDiagnostics";
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct LogTraceNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct SetTraceNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: LogTraceParams,
+impl Notification for SetTraceNotification {
+    type Params = SetTraceParams;
+    const METHOD: &'static str = "SetTrace";
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct CancelNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct LogTraceNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
-
-    pub params: CancelParams,
+impl Notification for LogTraceNotification {
+    type Params = LogTraceParams;
+    const METHOD: &'static str = "LogTrace";
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct ProgressNotification {
-    /// The version of the JSON RPC protocol.
-    pub jsonrpc: String,
+pub struct CancelRequestNotification;
 
-    /// The method to be invoked.
-    pub method: LSPNotificationMethods,
+impl Notification for CancelRequestNotification {
+    type Params = CancelParams;
+    const METHOD: &'static str = "CancelRequest";
+}
 
-    pub params: ProgressParams,
+pub struct ProgressNotification;
+
+impl Notification for ProgressNotification {
+    type Params = ProgressParams;
+    const METHOD: &'static str = "Progress";
 }

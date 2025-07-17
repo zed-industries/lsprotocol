@@ -66,13 +66,22 @@ class TypeData:
             if isinstance(kind, model.Request):
                 lines.setdefault("requests.rs", ["use crate::*;"]).extend(impl + ["", ""])
             elif isinstance(kind, model.Notification):
-                lines.setdefault("notifications.rs", ["use crate::*;"]).extend(impl + ["", ""])
+                lines.setdefault("notifications.rs", DEFAULT_NOTIFICATIONS_CONTENTS).extend(impl + ["", ""])
             else:
                 lines.setdefault("lib.rs", ["pub mod notifications;", "pub mod requests;"]).extend(impl + ["", ""])
 
         return lines
 
 
+DEFAULT_NOTIFICATIONS_CONTENTS = [
+    "use crate::*;",
+    "",
+    "pub trait Notification {",
+    "    type Params: serde::de::DeserializeOwned + serde::Serialize + Send + Sync + 'static;",
+    "    const METHOD: &'static str;",
+    "}",
+    ""
+]
 def generate_custom_enum(type_data: TypeData) -> None:
     type_data.add_type_info(
         model.ReferenceType(kind="reference", name="CustomStringEnum"),

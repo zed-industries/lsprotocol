@@ -19,6 +19,7 @@ from .rust_commons import (
     type_alias_wrapper,
 )
 from .rust_lang_utils import get_parts, lines_to_doc_comments, to_upper_camel_case
+from generator.plugins.rust.rust_commons import fix_lsp_method_name
 
 
 def generate_type_aliases(spec: model.LSPModel, types: TypeData) -> None:
@@ -307,40 +308,20 @@ def required_rpc_properties(name: Optional[str] = None) -> List[model.Property]:
 def generate_notification(
     notification_def: model.Notification, types: TypeData, spec: model.LSPModel
 ) -> None:
-    properties = required_rpc_properties("LSPNotificationMethods")
+    params_name = "()"
     if notification_def.params:
-        ptype = get_from_name(notification_def.params.name, spec)
-        if hasattr(ptype, "properties") and get_extended_properties(ptype, spec):
-            properties += [
-                model.Property(
-                    name="params",
-                    type=notification_def.params,
-                )
-            ]
-        else:
-            properties += [
-                model.Property(
-                    name="params",
-                    type=model.ReferenceType(kind="reference", name="LSPAny"),
-                    optional=True,
-                )
-            ]
-    else:
-        properties += [
-            model.Property(
-                name="params",
-                type=model.ReferenceType(kind="reference", name="()"),
-                optional=True,
-            )
-        ]
-
-    inner = []
-    for prop_def in properties:
-        inner += generate_property(prop_def, types, spec)
-
-    lines = struct_wrapper(notification_def, inner)
+        params_name = notification_def.params.name
+    name = get_message_type_name(notification_def)
+    lines = [
+        f"pub struct {name};",
+        "",
+        f"impl Notification for {name} {{"
+        f"    type Params = {params_name};",
+        f"    const METHOD: &'static str = \"{fix_lsp_method_name(notification_def.method)}\";"
+        "}"
+    ]
     types.add_type_info(
-        notification_def, get_message_type_name(notification_def), lines
+        notification_def, name, lines
     )
 
 
