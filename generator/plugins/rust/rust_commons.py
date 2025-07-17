@@ -372,22 +372,22 @@ def get_from_name(
 def get_extended_properties(
     struct_def: model.Structure, spec: model.LSPModel
 ) -> List[model.Property]:
-    properties = [p for p in struct_def.properties]
+    properties = []
     for t in struct_def.extends + struct_def.mixins:
         if t.kind == "reference":
             s = get_from_name(t.name, spec)
             if s:
-                s_props = get_extended_properties(s, spec)
-                properties += [p for p in s_props]
+                properties += [model.Property(name=to_snake_case(t.name), type=t, flattened=True)]
         elif t.kind == "literal":
             properties += [p for p in t.value.properties]
         else:
             raise ValueError(f"Unhandled extension type or mixin type: {t.kind}")
+    properties += [p for p in struct_def.properties]
     unique_props = []
     for p in properties:
         if not any((p.name == u.name) for u in unique_props):
             unique_props.append(p)
-    return sorted(unique_props, key=lambda p: p.name)
+    return sorted(unique_props, key=lambda p: (not p.flattened, p.name))
 
 
 def _is_str_enum(enum_def: model.Enum) -> bool:
@@ -678,4 +678,6 @@ def generate_extras(
         extras += ["#[deprecated]"]
     if type_def.proposed:
         extras += ['#[cfg(feature = "proposed")]']
+    if isinstance(type_def, model.Property) and type_def.flattened:
+        extras += ["#[serde(flatten)]"]
     return extras

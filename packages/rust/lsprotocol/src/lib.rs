@@ -2338,18 +2338,14 @@ pub type RegularExpressionEngineKind = String;
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ImplementationParams {
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
 
-    /// The position inside the text document.
-    pub position: Position,
+    #[serde(flatten)]
+    pub text_document_position_params: TextDocumentPositionParams,
 
-    /// The text document.
-    pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 }
 
 /// Represents a location inside a resource, such as a line
@@ -2365,48 +2361,40 @@ pub struct Location {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ImplementationRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub implementation_options: ImplementationOptions,
 
-    /// The id used to register the request. The id can be used to deregister
-    /// the request again. See also Registration#id.
-    pub id: Option<String>,
+    #[serde(flatten)]
+    pub static_registration_options: StaticRegistrationOptions,
 
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct TypeDefinitionParams {
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
 
-    /// The position inside the text document.
-    pub position: Position,
+    #[serde(flatten)]
+    pub text_document_position_params: TextDocumentPositionParams,
 
-    /// The text document.
-    pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct TypeDefinitionRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub static_registration_options: StaticRegistrationOptions,
 
-    /// The id used to register the request. The id can be used to deregister
-    /// the request again. See also Registration#id.
-    pub id: Option<String>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub type_definition_options: TypeDefinitionOptions,
 }
 
 /// A workspace folder inside a client.
@@ -2440,15 +2428,14 @@ pub struct ConfigurationParams {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentColorParams {
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 
     /// The text document.
     pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// Represents a color range from a document.
@@ -2465,37 +2452,34 @@ pub struct ColorInformation {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentColorRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub document_color_options: DocumentColorOptions,
 
-    /// The id used to register the request. The id can be used to deregister
-    /// the request again. See also Registration#id.
-    pub id: Option<String>,
+    #[serde(flatten)]
+    pub static_registration_options: StaticRegistrationOptions,
 
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// Parameters for a [ColorPresentationRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ColorPresentationParams {
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     /// The color to request presentations for.
     pub color: Color,
-
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
 
     /// The range where the color would be inserted. Serves as a context.
     pub range: Range,
 
     /// The text document.
     pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
@@ -2536,15 +2520,14 @@ pub struct TextDocumentRegistrationOptions {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct FoldingRangeParams {
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 
     /// The text document.
     pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// Represents a folding range. To be valid, start and end line must be bigger than zero and smaller
@@ -2582,81 +2565,70 @@ pub struct FoldingRange {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct FoldingRangeRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub folding_range_options: FoldingRangeOptions,
 
-    /// The id used to register the request. The id can be used to deregister
-    /// the request again. See also Registration#id.
-    pub id: Option<String>,
+    #[serde(flatten)]
+    pub static_registration_options: StaticRegistrationOptions,
 
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DeclarationParams {
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
 
-    /// The position inside the text document.
-    pub position: Position,
+    #[serde(flatten)]
+    pub text_document_position_params: TextDocumentPositionParams,
 
-    /// The text document.
-    pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DeclarationRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub declaration_options: DeclarationOptions,
 
-    /// The id used to register the request. The id can be used to deregister
-    /// the request again. See also Registration#id.
-    pub id: Option<String>,
+    #[serde(flatten)]
+    pub static_registration_options: StaticRegistrationOptions,
 
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// A parameter literal used in selection range requests.
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SelectionRangeParams {
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 
     /// The positions inside the text document.
     pub positions: Vec<Position>,
 
     /// The text document.
     pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SelectionRangeRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub selection_range_options: SelectionRangeOptions,
 
-    /// The id used to register the request. The id can be used to deregister
-    /// the request again. See also Registration#id.
-    pub id: Option<String>,
+    #[serde(flatten)]
+    pub static_registration_options: StaticRegistrationOptions,
 
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
@@ -2679,14 +2651,11 @@ pub struct WorkDoneProgressCancelParams {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CallHierarchyPrepareParams {
-    /// The position inside the text document.
-    pub position: Position,
+    #[serde(flatten)]
+    pub text_document_position_params: TextDocumentPositionParams,
 
-    /// The text document.
-    pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 }
 
 /// Represents programming constructs like functions or constructors in the context
@@ -2729,16 +2698,14 @@ pub struct CallHierarchyItem {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CallHierarchyRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub call_hierarchy_options: CallHierarchyOptions,
 
-    /// The id used to register the request. The id can be used to deregister
-    /// the request again. See also Registration#id.
-    pub id: Option<String>,
+    #[serde(flatten)]
+    pub static_registration_options: StaticRegistrationOptions,
 
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// The parameter of a `callHierarchy/incomingCalls` request.
@@ -2747,14 +2714,13 @@ pub struct CallHierarchyRegistrationOptions {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CallHierarchyIncomingCallsParams {
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     pub item: CallHierarchyItem,
-
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// Represents an incoming call, e.g. a caller of a method or constructor.
@@ -2777,14 +2743,13 @@ pub struct CallHierarchyIncomingCall {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CallHierarchyOutgoingCallsParams {
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     pub item: CallHierarchyItem,
-
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// Represents an outgoing call, e.g. calling a getter from a method or a method from a constructor etc.
@@ -2806,15 +2771,14 @@ pub struct CallHierarchyOutgoingCall {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SemanticTokensParams {
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 
     /// The text document.
     pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// @since 3.16.0
@@ -2842,35 +2806,25 @@ pub struct SemanticTokensPartialResult {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SemanticTokensRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub semantic_tokens_options: SemanticTokensOptions,
 
-    /// Server supports providing semantic tokens for a full document.
-    pub full: Option<OR2<bool, SemanticTokensFullDelta>>,
+    #[serde(flatten)]
+    pub static_registration_options: StaticRegistrationOptions,
 
-    /// The id used to register the request. The id can be used to deregister
-    /// the request again. See also Registration#id.
-    pub id: Option<String>,
-
-    /// The legend used by the server
-    pub legend: SemanticTokensLegend,
-
-    /// Server supports providing semantic tokens for a specific range
-    /// of a document.
-    pub range: Option<OR2<bool, LSPObject>>,
-
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// @since 3.16.0
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SemanticTokensDeltaParams {
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 
     /// The result id of a previous response. The result Id can either point to a full response
     /// or a delta response depending on what was received last.
@@ -2878,9 +2832,6 @@ pub struct SemanticTokensDeltaParams {
 
     /// The text document.
     pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// @since 3.16.0
@@ -2904,18 +2855,17 @@ pub struct SemanticTokensDeltaPartialResult {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SemanticTokensRangeParams {
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 
     /// The range the semantic tokens are requested for.
     pub range: Range,
 
     /// The text document.
     pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// Params to show a resource in the UI.
@@ -2958,14 +2908,11 @@ pub struct ShowDocumentResult {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct LinkedEditingRangeParams {
-    /// The position inside the text document.
-    pub position: Position,
+    #[serde(flatten)]
+    pub text_document_position_params: TextDocumentPositionParams,
 
-    /// The text document.
-    pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 }
 
 /// The result of a linked editing range request.
@@ -2987,16 +2934,14 @@ pub struct LinkedEditingRanges {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct LinkedEditingRangeRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub linked_editing_range_options: LinkedEditingRangeOptions,
 
-    /// The id used to register the request. The id can be used to deregister
-    /// the request again. See also Registration#id.
-    pub id: Option<String>,
+    #[serde(flatten)]
+    pub static_registration_options: StaticRegistrationOptions,
 
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// The parameters sent in notifications/requests for user-initiated creation of
@@ -3085,18 +3030,14 @@ pub struct DeleteFilesParams {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct MonikerParams {
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
 
-    /// The position inside the text document.
-    pub position: Position,
+    #[serde(flatten)]
+    pub text_document_position_params: TextDocumentPositionParams,
 
-    /// The text document.
-    pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 }
 
 /// Moniker definition to match LSIF 0.5 moniker definition.
@@ -3122,12 +3063,11 @@ pub struct Moniker {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct MonikerRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub moniker_options: MonikerOptions,
 
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// The parameter of a `textDocument/prepareTypeHierarchy` request.
@@ -3136,14 +3076,11 @@ pub struct MonikerRegistrationOptions {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct TypeHierarchyPrepareParams {
-    /// The position inside the text document.
-    pub position: Position,
+    #[serde(flatten)]
+    pub text_document_position_params: TextDocumentPositionParams,
 
-    /// The text document.
-    pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 }
 
 /// @since 3.17.0
@@ -3187,16 +3124,14 @@ pub struct TypeHierarchyItem {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct TypeHierarchyRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub static_registration_options: StaticRegistrationOptions,
 
-    /// The id used to register the request. The id can be used to deregister
-    /// the request again. See also Registration#id.
-    pub id: Option<String>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub type_hierarchy_options: TypeHierarchyOptions,
 }
 
 /// The parameter of a `typeHierarchy/supertypes` request.
@@ -3205,14 +3140,13 @@ pub struct TypeHierarchyRegistrationOptions {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct TypeHierarchySupertypesParams {
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     pub item: TypeHierarchyItem,
-
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// The parameter of a `typeHierarchy/subtypes` request.
@@ -3221,14 +3155,13 @@ pub struct TypeHierarchySupertypesParams {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct TypeHierarchySubtypesParams {
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     pub item: TypeHierarchyItem,
-
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// A parameter literal used in inline value requests.
@@ -3237,6 +3170,9 @@ pub struct TypeHierarchySubtypesParams {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct InlineValueParams {
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     /// Additional information about the context in which inline values were
     /// requested.
     pub context: InlineValueContext,
@@ -3246,9 +3182,6 @@ pub struct InlineValueParams {
 
     /// The text document.
     pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// Inline value options used during static or dynamic registration.
@@ -3257,16 +3190,14 @@ pub struct InlineValueParams {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct InlineValueRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub inline_value_options: InlineValueOptions,
 
-    /// The id used to register the request. The id can be used to deregister
-    /// the request again. See also Registration#id.
-    pub id: Option<String>,
+    #[serde(flatten)]
+    pub static_registration_options: StaticRegistrationOptions,
 
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// A parameter literal used in inlay hint requests.
@@ -3275,14 +3206,14 @@ pub struct InlineValueRegistrationOptions {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct InlayHintParams {
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     /// The document range for which inlay hints should be computed.
     pub range: Range,
 
     /// The text document.
     pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// Inlay hint information.
@@ -3342,20 +3273,14 @@ pub struct InlayHint {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct InlayHintRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub inlay_hint_options: InlayHintOptions,
 
-    /// The id used to register the request. The id can be used to deregister
-    /// the request again. See also Registration#id.
-    pub id: Option<String>,
+    #[serde(flatten)]
+    pub static_registration_options: StaticRegistrationOptions,
 
-    /// The server provides support to resolve additional
-    /// information for an inlay hint item.
-    pub resolve_provider: Option<bool>,
-
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// Parameters of the document diagnostic request.
@@ -3364,21 +3289,20 @@ pub struct InlayHintRegistrationOptions {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentDiagnosticParams {
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     /// The additional identifier  provided during registration.
     pub identifier: Option<String>,
-
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
 
     /// The result id of a previous response if provided.
     pub previous_result_id: Option<String>,
 
     /// The text document.
     pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// A partial result for a document diagnostic report.
@@ -3406,29 +3330,14 @@ pub struct DiagnosticServerCancellationData {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DiagnosticRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub diagnostic_options: DiagnosticOptions,
 
-    /// The id used to register the request. The id can be used to deregister
-    /// the request again. See also Registration#id.
-    pub id: Option<String>,
+    #[serde(flatten)]
+    pub static_registration_options: StaticRegistrationOptions,
 
-    /// An optional identifier under which the diagnostics are
-    /// managed by the client.
-    pub identifier: Option<String>,
-
-    /// Whether the language has inter file dependencies meaning that
-    /// editing code in one file can result in a different diagnostic
-    /// set in another file. Inter file dependencies are common for
-    /// most programming languages and typically uncommon for linters.
-    pub inter_file_dependencies: bool,
-
-    pub work_done_progress: Option<bool>,
-
-    /// The server provides support for workspace diagnostics as well.
-    pub workspace_diagnostics: bool,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// Parameters of the workspace diagnostic request.
@@ -3437,19 +3346,18 @@ pub struct DiagnosticRegistrationOptions {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct WorkspaceDiagnosticParams {
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     /// The additional identifier provided during registration.
     pub identifier: Option<String>,
-
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
 
     /// The currently known diagnostic reports with their
     /// previous result ids.
     pub previous_result_ids: Vec<PreviousResultId>,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// A workspace diagnostic report.
@@ -3490,17 +3398,11 @@ pub struct DidOpenNotebookDocumentParams {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct NotebookDocumentSyncRegistrationOptions {
-    /// The id used to register the request. The id can be used to deregister
-    /// the request again. See also Registration#id.
-    pub id: Option<String>,
+    #[serde(flatten)]
+    pub notebook_document_sync_options: NotebookDocumentSyncOptions,
 
-    /// The notebooks to be synced
-    pub notebook_selector:
-        Vec<OR2<NotebookDocumentFilterWithNotebook, NotebookDocumentFilterWithCells>>,
-
-    /// Whether save notification should be forwarded to
-    /// the server. Will only be honored if mode === `notebook`.
-    pub save: Option<bool>,
+    #[serde(flatten)]
+    pub static_registration_options: StaticRegistrationOptions,
 }
 
 /// The params sent in a change notebook document notification.
@@ -3563,18 +3465,15 @@ pub struct DidCloseNotebookDocumentParams {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct InlineCompletionParams {
+    #[serde(flatten)]
+    pub text_document_position_params: TextDocumentPositionParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     /// Additional information about the context in which inline completions were
     /// requested.
     pub context: InlineCompletionContext,
-
-    /// The position inside the text document.
-    pub position: Position,
-
-    /// The text document.
-    pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// Represents a collection of [inline completion items][InlineCompletionItem] to be presented in the editor.
@@ -3618,16 +3517,14 @@ pub struct InlineCompletionItem {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct InlineCompletionRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub inline_completion_options: InlineCompletionOptions,
 
-    /// The id used to register the request. The id can be used to deregister
-    /// the request again. See also Registration#id.
-    pub id: Option<String>,
+    #[serde(flatten)]
+    pub static_registration_options: StaticRegistrationOptions,
 
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// Parameters for the `workspace/textDocumentContent` request.
@@ -3665,12 +3562,11 @@ pub struct TextDocumentContentResult {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct TextDocumentContentRegistrationOptions {
-    /// The id used to register the request. The id can be used to deregister
-    /// the request again. See also Registration#id.
-    pub id: Option<String>,
+    #[serde(flatten)]
+    pub static_registration_options: StaticRegistrationOptions,
 
-    /// The schemes for which the server provides content.
-    pub schemes: Vec<String>,
+    #[serde(flatten)]
+    pub text_document_content_options: TextDocumentContentOptions,
 }
 
 /// Parameters for the `workspace/textDocumentContent/refresh` request.
@@ -3700,65 +3596,11 @@ pub struct UnregistrationParams {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct InitializeParams {
-    /// The capabilities provided by the client (editor or tool)
-    pub capabilities: ClientCapabilities,
+    #[serde(flatten)]
+    pub initialize_params: _InitializeParams,
 
-    /// Information about the client
-    ///
-    /// @since 3.15.0
-    pub client_info: Option<ClientInfo>,
-
-    /// User provided initialization options.
-    pub initialization_options: Option<LSPAny>,
-
-    /// The locale the client is currently showing the user interface
-    /// in. This must not necessarily be the locale of the operating
-    /// system.
-    ///
-    /// Uses IETF language tags as the value's syntax
-    /// (See https://en.wikipedia.org/wiki/IETF_language_tag)
-    ///
-    /// @since 3.16.0
-    pub locale: Option<String>,
-
-    /// The process Id of the parent process that started
-    /// the server.
-    ///
-    /// Is `null` if the process has not been started by another process.
-    /// If the parent process is not alive then the server should exit.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub process_id: Option<i32>,
-
-    /// The rootPath of the workspace. Is null
-    /// if no folder is open.
-    ///
-    /// @deprecated in favour of rootUri.
-    #[deprecated]
-    pub root_path: Option<String>,
-
-    /// The rootUri of the workspace. Is null if no
-    /// folder is open. If both `rootPath` and `rootUri` are set
-    /// `rootUri` wins.
-    ///
-    /// @deprecated in favour of workspaceFolders.
-    #[deprecated]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub root_uri: Option<Url>,
-
-    /// The initial trace setting. If omitted trace is disabled ('off').
-    pub trace: Option<TraceValue>,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
-
-    /// The workspace folders configured in the client when the server starts.
-    ///
-    /// This property is only available if the client supports workspace folders.
-    /// It can be `null` if the client supports workspace folders but none are
-    /// configured.
-    ///
-    /// @since 3.6.0
-    pub workspace_folders: Option<Vec<WorkspaceFolder>>,
+    #[serde(flatten)]
+    pub workspace_folders_initialize_params: WorkspaceFoldersInitializeParams,
 }
 
 /// The result returned from an initialize request.
@@ -3884,10 +3726,8 @@ pub struct DidChangeTextDocumentParams {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct TextDocumentChangeRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 
     /// How documents are synced to the server.
     pub sync_kind: TextDocumentSyncKind,
@@ -3917,13 +3757,11 @@ pub struct DidSaveTextDocumentParams {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct TextDocumentSaveRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub save_options: SaveOptions,
 
-    /// The client is supposed to include the content on save.
-    pub include_text: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// The parameters sent in a will save text document notification.
@@ -3986,22 +3824,18 @@ pub struct PublishDiagnosticsParams {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CompletionParams {
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub text_document_position_params: TextDocumentPositionParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     /// The completion context. This is only available it the client specifies
     /// to send this using the client capability `textDocument.completion.contextSupport === true`
     pub context: Option<CompletionContext>,
-
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
-
-    /// The position inside the text document.
-    pub position: Position,
-
-    /// The text document.
-    pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// A completion item represents a text snippet that is
@@ -4202,56 +4036,22 @@ pub struct CompletionList {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CompletionRegistrationOptions {
-    /// The list of all possible characters that commit a completion. This field can be used
-    /// if clients don't support individual commit characters per completion item. See
-    /// `ClientCapabilities.textDocument.completion.completionItem.commitCharactersSupport`
-    ///
-    /// If a server provides both `allCommitCharacters` and commit characters on an individual
-    /// completion item the ones on the completion item win.
-    ///
-    /// @since 3.2.0
-    pub all_commit_characters: Option<Vec<String>>,
+    #[serde(flatten)]
+    pub completion_options: CompletionOptions,
 
-    /// The server supports the following `CompletionItem` specific
-    /// capabilities.
-    ///
-    /// @since 3.17.0
-    pub completion_item: Option<ServerCompletionItemOptions>,
-
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
-
-    /// The server provides support to resolve additional
-    /// information for a completion item.
-    pub resolve_provider: Option<bool>,
-
-    /// Most tools trigger completion request automatically without explicitly requesting
-    /// it using a keyboard shortcut (e.g. Ctrl+Space). Typically they do so when the user
-    /// starts to type an identifier. For example if the user types `c` in a JavaScript file
-    /// code complete will automatically pop up present `console` besides others as a
-    /// completion item. Characters that make up identifiers don't need to be listed here.
-    ///
-    /// If code complete should automatically be trigger on characters not being valid inside
-    /// an identifier (for example `.` in JavaScript) list them in `triggerCharacters`.
-    pub trigger_characters: Option<Vec<String>>,
-
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// Parameters for a [HoverRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct HoverParams {
-    /// The position inside the text document.
-    pub position: Position,
+    #[serde(flatten)]
+    pub text_document_position_params: TextDocumentPositionParams,
 
-    /// The text document.
-    pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 }
 
 /// The result of a hover request.
@@ -4270,32 +4070,28 @@ pub struct Hover {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct HoverRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub hover_options: HoverOptions,
 
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// Parameters for a [SignatureHelpRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SignatureHelpParams {
+    #[serde(flatten)]
+    pub text_document_position_params: TextDocumentPositionParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     /// The signature help context. This is only available if the client specifies
     /// to send this using the client capability `textDocument.signatureHelp.contextSupport === true`
     ///
     /// @since 3.15.0
     pub context: Option<SignatureHelpContext>,
-
-    /// The position inside the text document.
-    pub position: Position,
-
-    /// The text document.
-    pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// Signature help represents the signature of something
@@ -4341,103 +4137,77 @@ pub struct SignatureHelp {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SignatureHelpRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub signature_help_options: SignatureHelpOptions,
 
-    /// List of characters that re-trigger signature help.
-    ///
-    /// These trigger characters are only active when signature help is already showing. All trigger characters
-    /// are also counted as re-trigger characters.
-    ///
-    /// @since 3.15.0
-    pub retrigger_characters: Option<Vec<String>>,
-
-    /// List of characters that trigger signature help automatically.
-    pub trigger_characters: Option<Vec<String>>,
-
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// Parameters for a [DefinitionRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DefinitionParams {
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
 
-    /// The position inside the text document.
-    pub position: Position,
+    #[serde(flatten)]
+    pub text_document_position_params: TextDocumentPositionParams,
 
-    /// The text document.
-    pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 }
 
 /// Registration options for a [DefinitionRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DefinitionRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub definition_options: DefinitionOptions,
 
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// Parameters for a [ReferencesRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ReferenceParams {
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub text_document_position_params: TextDocumentPositionParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     pub context: ReferenceContext,
-
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
-
-    /// The position inside the text document.
-    pub position: Position,
-
-    /// The text document.
-    pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// Registration options for a [ReferencesRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ReferenceRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub reference_options: ReferenceOptions,
 
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// Parameters for a [DocumentHighlightRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentHighlightParams {
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
 
-    /// The position inside the text document.
-    pub position: Position,
+    #[serde(flatten)]
+    pub text_document_position_params: TextDocumentPositionParams,
 
-    /// The text document.
-    pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 }
 
 /// A document highlight is a range inside a text document which deserves
@@ -4457,27 +4227,25 @@ pub struct DocumentHighlight {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentHighlightRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub document_highlight_options: DocumentHighlightOptions,
 
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// Parameters for a [DocumentSymbolRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentSymbolParams {
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 
     /// The text document.
     pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// Represents information about programming constructs like variables, classes,
@@ -4485,20 +4253,14 @@ pub struct DocumentSymbolParams {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SymbolInformation {
-    /// The name of the symbol containing this symbol. This information is for
-    /// user interface purposes (e.g. to render a qualifier in the user interface
-    /// if necessary). It can't be used to re-infer a hierarchy for the document
-    /// symbols.
-    pub container_name: Option<String>,
+    #[serde(flatten)]
+    pub base_symbol_information: BaseSymbolInformation,
 
     /// Indicates if this symbol is deprecated.
     ///
     /// @deprecated Use tags instead
     #[deprecated]
     pub deprecated: Option<bool>,
-
-    /// The kind of this symbol.
-    pub kind: SymbolKind,
 
     /// The location of this symbol. The location's range is used by a tool
     /// to reveal the location in the editor. If the symbol is selected in the
@@ -4510,14 +4272,6 @@ pub struct SymbolInformation {
     /// syntax tree. It can therefore not be used to re-construct a hierarchy of
     /// the symbols.
     pub location: Location,
-
-    /// The name of this symbol.
-    pub name: String,
-
-    /// Tags for this symbol.
-    ///
-    /// @since 3.16.0
-    pub tags: Option<Vec<SymbolTag>>,
 }
 
 /// Represents programming constructs like variables, classes, interfaces etc.
@@ -4565,39 +4319,31 @@ pub struct DocumentSymbol {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentSymbolRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub document_symbol_options: DocumentSymbolOptions,
 
-    /// A human-readable string that is shown when multiple outlines trees
-    /// are shown for the same document.
-    ///
-    /// @since 3.16.0
-    pub label: Option<String>,
-
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// The parameters of a [CodeActionRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CodeActionParams {
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     /// Context carrying additional information.
     pub context: CodeActionContext,
-
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
 
     /// The range for which the command was invoked.
     pub range: Range,
 
     /// The document in which the command was invoked.
     pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// Represents a reference to a command. Provides a title which
@@ -4693,51 +4439,22 @@ pub struct CodeAction {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CodeActionRegistrationOptions {
-    /// CodeActionKinds that this server may return.
-    ///
-    /// The list of kinds may be generic, such as `CodeActionKind.Refactor`, or the server
-    /// may list out every specific kind they provide.
-    pub code_action_kinds: Option<Vec<CustomStringEnum<CodeActionKind>>>,
+    #[serde(flatten)]
+    pub code_action_options: CodeActionOptions,
 
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
-
-    /// Static documentation for a class of code actions.
-    ///
-    /// Documentation from the provider should be shown in the code actions menu if either:
-    ///
-    /// - Code actions of `kind` are requested by the editor. In this case, the editor will show the documentation that
-    ///   most closely matches the requested code action kind. For example, if a provider has documentation for
-    ///   both `Refactor` and `RefactorExtract`, when the user requests code actions for `RefactorExtract`,
-    ///   the editor will use the documentation for `RefactorExtract` instead of the documentation for `Refactor`.
-    ///
-    /// - Any code actions of `kind` are returned by the provider.
-    ///
-    /// At most one documentation entry should be shown per provider.
-    ///
-    /// @since 3.18.0
-    /// @proposed
-    #[cfg(feature = "proposed")]
-    pub documentation: Option<Vec<CodeActionKindDocumentation>>,
-
-    /// The server provides support to resolve additional
-    /// information for a code action.
-    ///
-    /// @since 3.16.0
-    pub resolve_provider: Option<bool>,
-
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// The parameters of a [WorkspaceSymbolRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct WorkspaceSymbolParams {
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 
     /// A query string to filter symbols by. Clients may send an empty
     /// string here to request all symbols.
@@ -4748,9 +4465,6 @@ pub struct WorkspaceSymbolParams {
     /// characters of *query* appear in their order in a candidate symbol.
     /// Servers shouldn't use prefix, substring, or similar strict matching.
     pub query: String,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// A special workspace symbol that supports locations without a range.
@@ -4761,18 +4475,12 @@ pub struct WorkspaceSymbolParams {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct WorkspaceSymbol {
-    /// The name of the symbol containing this symbol. This information is for
-    /// user interface purposes (e.g. to render a qualifier in the user interface
-    /// if necessary). It can't be used to re-infer a hierarchy for the document
-    /// symbols.
-    pub container_name: Option<String>,
+    #[serde(flatten)]
+    pub base_symbol_information: BaseSymbolInformation,
 
     /// A data entry field that is preserved on a workspace symbol between a
     /// workspace symbol request and a workspace symbol resolve request.
     pub data: Option<LSPAny>,
-
-    /// The kind of this symbol.
-    pub kind: SymbolKind,
 
     /// The location of the symbol. Whether a server is allowed to
     /// return a location without a range depends on the client
@@ -4780,42 +4488,28 @@ pub struct WorkspaceSymbol {
     ///
     /// See SymbolInformation#location for more details.
     pub location: OR2<Location, LocationUriOnly>,
-
-    /// The name of this symbol.
-    pub name: String,
-
-    /// Tags for this symbol.
-    ///
-    /// @since 3.16.0
-    pub tags: Option<Vec<SymbolTag>>,
 }
 
 /// Registration options for a [WorkspaceSymbolRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct WorkspaceSymbolRegistrationOptions {
-    /// The server provides support to resolve additional
-    /// information for a workspace symbol.
-    ///
-    /// @since 3.17.0
-    pub resolve_provider: Option<bool>,
-
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub workspace_symbol_options: WorkspaceSymbolOptions,
 }
 
 /// The parameters of a [CodeLensRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CodeLensParams {
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 
     /// The document to request code lens for.
     pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// A code lens represents a [command][Command] that should be shown along with
@@ -4841,30 +4535,25 @@ pub struct CodeLens {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CodeLensRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub code_lens_options: CodeLensOptions,
 
-    /// Code lens has a resolve provider as well.
-    pub resolve_provider: Option<bool>,
-
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// The parameters of a [DocumentLinkRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentLinkParams {
-    /// An optional token that a server can use to report partial results (e.g. streaming) to
-    /// the client.
-    pub partial_result_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub partial_result_params: PartialResultParams,
+
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 
     /// The document to provide document links for.
     pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// A document link is a range in a text document that links to an internal or external resource, like another
@@ -4896,47 +4585,45 @@ pub struct DocumentLink {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentLinkRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub document_link_options: DocumentLinkOptions,
 
-    /// Document links have a resolve provider as well.
-    pub resolve_provider: Option<bool>,
-
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// The parameters of a [DocumentFormattingRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentFormattingParams {
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     /// The format options.
     pub options: FormattingOptions,
 
     /// The document to format.
     pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// Registration options for a [DocumentFormattingRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentFormattingRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub document_formatting_options: DocumentFormattingOptions,
 
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// The parameters of a [DocumentRangeFormattingRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentRangeFormattingParams {
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     /// The format options
     pub options: FormattingOptions,
 
@@ -4945,28 +4632,17 @@ pub struct DocumentRangeFormattingParams {
 
     /// The document to format.
     pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// Registration options for a [DocumentRangeFormattingRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentRangeFormattingRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub document_range_formatting_options: DocumentRangeFormattingOptions,
 
-    /// Whether the server supports formatting multiple ranges at once.
-    ///
-    /// @since 3.18.0
-    /// @proposed
-    #[cfg(feature = "proposed")]
-    pub ranges_support: Option<bool>,
-
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// The parameters of a [DocumentRangesFormattingRequest].
@@ -4977,6 +4653,9 @@ pub struct DocumentRangeFormattingRegistrationOptions {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentRangesFormattingParams {
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     /// The format options
     pub options: FormattingOptions,
 
@@ -4985,9 +4664,6 @@ pub struct DocumentRangesFormattingParams {
 
     /// The document to format.
     pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// The parameters of a [DocumentOnTypeFormattingRequest].
@@ -5016,22 +4692,20 @@ pub struct DocumentOnTypeFormattingParams {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentOnTypeFormattingRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub document_on_type_formatting_options: DocumentOnTypeFormattingOptions,
 
-    /// A character on which formatting should be triggered, like `{`.
-    pub first_trigger_character: String,
-
-    /// More trigger characters.
-    pub more_trigger_character: Option<Vec<String>>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 /// The parameters of a [RenameRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct RenameParams {
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     /// The new name of the symbol. If the given name is not valid the
     /// request must return a [ResponseError] with an
     /// appropriate message set.
@@ -5042,63 +4716,49 @@ pub struct RenameParams {
 
     /// The document to rename.
     pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// Registration options for a [RenameRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct RenameRegistrationOptions {
-    /// A document selector to identify the scope of the registration. If set to null
-    /// the document selector provided on the client side will be used.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub document_selector: Option<DocumentSelector>,
+    #[serde(flatten)]
+    pub rename_options: RenameOptions,
 
-    /// Renames should be checked and tested before being executed.
-    ///
-    /// @since version 3.12.0
-    pub prepare_provider: Option<bool>,
-
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub text_document_registration_options: TextDocumentRegistrationOptions,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct PrepareRenameParams {
-    /// The position inside the text document.
-    pub position: Position,
+    #[serde(flatten)]
+    pub text_document_position_params: TextDocumentPositionParams,
 
-    /// The text document.
-    pub text_document: TextDocumentIdentifier,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
 }
 
 /// The parameters of a [ExecuteCommandRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ExecuteCommandParams {
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     /// Arguments that the command should be invoked with.
     pub arguments: Option<Vec<LSPAny>>,
 
     /// The identifier of the actual command handler.
     pub command: String,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 /// Registration options for a [ExecuteCommandRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ExecuteCommandRegistrationOptions {
-    /// The commands to be executed on the server
-    pub commands: Vec<String>,
-
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub execute_command_options: ExecuteCommandOptions,
 }
 
 /// The parameters passed via an apply workspace edit request.
@@ -5316,7 +4976,8 @@ pub struct Range {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ImplementationOptions {
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
 }
 
 /// Static registration options to be returned in the initialize
@@ -5332,7 +4993,8 @@ pub struct StaticRegistrationOptions {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct TypeDefinitionOptions {
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
 }
 
 /// The workspace folder change event.
@@ -5384,19 +5046,22 @@ pub struct Color {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentColorOptions {
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct FoldingRangeOptions {
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DeclarationOptions {
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
 }
 
 /// Position in a text document expressed as zero-based line and character
@@ -5442,7 +5107,8 @@ pub struct Position {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SelectionRangeOptions {
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
 }
 
 /// Call hierarchy options used during static registration.
@@ -5451,13 +5117,17 @@ pub struct SelectionRangeOptions {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CallHierarchyOptions {
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
 }
 
 /// @since 3.16.0
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SemanticTokensOptions {
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
+
     /// Server supports providing semantic tokens for a full document.
     pub full: Option<OR2<bool, SemanticTokensFullDelta>>,
 
@@ -5467,8 +5137,6 @@ pub struct SemanticTokensOptions {
     /// Server supports providing semantic tokens for a specific range
     /// of a document.
     pub range: Option<OR2<bool, LSPObject>>,
-
-    pub work_done_progress: Option<bool>,
 }
 
 /// @since 3.16.0
@@ -5488,7 +5156,8 @@ pub struct SemanticTokensEdit {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct LinkedEditingRangeOptions {
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
 }
 
 /// Represents information on a file/folder create.
@@ -5525,10 +5194,8 @@ pub struct TextDocumentEdit {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CreateFile {
-    /// An optional annotation identifier describing the operation.
-    ///
-    /// @since 3.16.0
-    pub annotation_id: Option<ChangeAnnotationIdentifier>,
+    #[serde(flatten)]
+    pub resource_operation: ResourceOperation,
 
     /// A create
     pub kind: String,
@@ -5544,10 +5211,8 @@ pub struct CreateFile {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct RenameFile {
-    /// An optional annotation identifier describing the operation.
-    ///
-    /// @since 3.16.0
-    pub annotation_id: Option<ChangeAnnotationIdentifier>,
+    #[serde(flatten)]
+    pub resource_operation: ResourceOperation,
 
     /// A rename
     pub kind: String,
@@ -5566,10 +5231,8 @@ pub struct RenameFile {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DeleteFile {
-    /// An optional annotation identifier describing the operation.
-    ///
-    /// @since 3.16.0
-    pub annotation_id: Option<ChangeAnnotationIdentifier>,
+    #[serde(flatten)]
+    pub resource_operation: ResourceOperation,
 
     /// A delete
     pub kind: String,
@@ -5640,7 +5303,8 @@ pub struct FileDelete {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct MonikerOptions {
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
 }
 
 /// Type hierarchy options used during static registration.
@@ -5649,7 +5313,8 @@ pub struct MonikerOptions {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct TypeHierarchyOptions {
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
 }
 
 /// @since 3.17.0
@@ -5718,7 +5383,8 @@ pub struct InlineValueEvaluatableExpression {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct InlineValueOptions {
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
 }
 
 /// An inlay hint label part allows for interactive and composite labels
@@ -5794,11 +5460,12 @@ pub struct MarkupContent {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct InlayHintOptions {
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
+
     /// The server provides support to resolve additional
     /// information for an inlay hint item.
     pub resolve_provider: Option<bool>,
-
-    pub work_done_progress: Option<bool>,
 }
 
 /// A full diagnostic report with a set of related documents.
@@ -5807,11 +5474,8 @@ pub struct InlayHintOptions {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct RelatedFullDocumentDiagnosticReport {
-    /// The actual items.
-    pub items: Vec<Diagnostic>,
-
-    /// A full document diagnostic report.
-    pub kind: String,
+    #[serde(flatten)]
+    pub full_document_diagnostic_report: FullDocumentDiagnosticReport,
 
     /// Diagnostics of related documents. This information is useful
     /// in programming languages where code in a file A can generate
@@ -5822,11 +5486,6 @@ pub struct RelatedFullDocumentDiagnosticReport {
     /// @since 3.17.0
     pub related_documents:
         Option<HashMap<Url, OR2<FullDocumentDiagnosticReport, UnchangedDocumentDiagnosticReport>>>,
-
-    /// An optional result id. If provided it will
-    /// be sent on the next diagnostic request for the
-    /// same document.
-    pub result_id: Option<String>,
 }
 
 /// An unchanged diagnostic report with a set of related documents.
@@ -5835,11 +5494,8 @@ pub struct RelatedFullDocumentDiagnosticReport {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct RelatedUnchangedDocumentDiagnosticReport {
-    /// A document diagnostic report indicating
-    /// no changes to the last result. A server can
-    /// only return `unchanged` if result ids are
-    /// provided.
-    pub kind: String,
+    #[serde(flatten)]
+    pub unchanged_document_diagnostic_report: UnchangedDocumentDiagnosticReport,
 
     /// Diagnostics of related documents. This information is useful
     /// in programming languages where code in a file A can generate
@@ -5850,10 +5506,6 @@ pub struct RelatedUnchangedDocumentDiagnosticReport {
     /// @since 3.17.0
     pub related_documents:
         Option<HashMap<Url, OR2<FullDocumentDiagnosticReport, UnchangedDocumentDiagnosticReport>>>,
-
-    /// A result id which will be sent on the next
-    /// diagnostic request for the same document.
-    pub result_id: String,
 }
 
 /// A diagnostic report with a full set of problems.
@@ -5898,6 +5550,9 @@ pub struct UnchangedDocumentDiagnosticReport {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DiagnosticOptions {
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
+
     /// An optional identifier under which the diagnostics are
     /// managed by the client.
     pub identifier: Option<String>,
@@ -5907,8 +5562,6 @@ pub struct DiagnosticOptions {
     /// set in another file. Inter file dependencies are common for
     /// most programming languages and typically uncommon for linters.
     pub inter_file_dependencies: bool,
-
-    pub work_done_progress: Option<bool>,
 
     /// The server provides support for workspace diagnostics as well.
     pub workspace_diagnostics: bool,
@@ -6080,7 +5733,8 @@ pub struct StringValue {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct InlineCompletionOptions {
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
 }
 
 /// Text document content provider options.
@@ -6126,6 +5780,9 @@ pub struct Unregistration {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct _InitializeParams {
+    #[serde(flatten)]
+    pub work_done_progress_params: WorkDoneProgressParams,
+
     /// The capabilities provided by the client (editor or tool)
     pub capabilities: ClientCapabilities,
 
@@ -6173,9 +5830,6 @@ pub struct _InitializeParams {
 
     /// The initial trace setting. If omitted trace is disabled ('off').
     pub trace: Option<TraceValue>,
-
-    /// An optional token that a server can use to report work done progress.
-    pub work_done_token: Option<ProgressToken>,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
@@ -6369,8 +6023,8 @@ pub struct ServerInfo {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct VersionedTextDocumentIdentifier {
-    /// The text document's uri.
-    pub uri: Url,
+    #[serde(flatten)]
+    pub text_document_identifier: TextDocumentIdentifier,
 
     /// The version number of this document.
     pub version: i32,
@@ -6609,6 +6263,9 @@ pub struct CompletionItemApplyKinds {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CompletionOptions {
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
+
     /// The list of all possible characters that commit a completion. This field can be used
     /// if clients don't support individual commit characters per completion item. See
     /// `ClientCapabilities.textDocument.completion.completionItem.commitCharactersSupport`
@@ -6638,15 +6295,14 @@ pub struct CompletionOptions {
     /// If code complete should automatically be trigger on characters not being valid inside
     /// an identifier (for example `.` in JavaScript) list them in `triggerCharacters`.
     pub trigger_characters: Option<Vec<String>>,
-
-    pub work_done_progress: Option<bool>,
 }
 
 /// Hover options.
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct HoverOptions {
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
 }
 
 /// Additional information about the context in which a signature help request was triggered.
@@ -6711,6 +6367,9 @@ pub struct SignatureInformation {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SignatureHelpOptions {
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
+
     /// List of characters that re-trigger signature help.
     ///
     /// These trigger characters are only active when signature help is already showing. All trigger characters
@@ -6721,15 +6380,14 @@ pub struct SignatureHelpOptions {
 
     /// List of characters that trigger signature help automatically.
     pub trigger_characters: Option<Vec<String>>,
-
-    pub work_done_progress: Option<bool>,
 }
 
 /// Server Capabilities for a [DefinitionRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DefinitionOptions {
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
 }
 
 /// Value-object that contains additional information when
@@ -6745,14 +6403,16 @@ pub struct ReferenceContext {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ReferenceOptions {
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
 }
 
 /// Provider options for a [DocumentHighlightRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentHighlightOptions {
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
 }
 
 /// A base for all symbol information.
@@ -6781,13 +6441,14 @@ pub struct BaseSymbolInformation {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentSymbolOptions {
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
+
     /// A human-readable string that is shown when multiple outlines trees
     /// are shown for the same document.
     ///
     /// @since 3.16.0
     pub label: Option<String>,
-
-    pub work_done_progress: Option<bool>,
 }
 
 /// Contains additional diagnostic information about the context in which
@@ -6830,6 +6491,9 @@ pub struct CodeActionDisabled {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CodeActionOptions {
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
+
     /// CodeActionKinds that this server may return.
     ///
     /// The list of kinds may be generic, such as `CodeActionKind.Refactor`, or the server
@@ -6859,8 +6523,6 @@ pub struct CodeActionOptions {
     ///
     /// @since 3.16.0
     pub resolve_provider: Option<bool>,
-
-    pub work_done_progress: Option<bool>,
 }
 
 /// Location with only uri and does not include range.
@@ -6876,33 +6538,36 @@ pub struct LocationUriOnly {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct WorkspaceSymbolOptions {
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
+
     /// The server provides support to resolve additional
     /// information for a workspace symbol.
     ///
     /// @since 3.17.0
     pub resolve_provider: Option<bool>,
-
-    pub work_done_progress: Option<bool>,
 }
 
 /// Code Lens provider options of a [CodeLensRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CodeLensOptions {
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
+
     /// Code lens has a resolve provider as well.
     pub resolve_provider: Option<bool>,
-
-    pub work_done_progress: Option<bool>,
 }
 
 /// Provider options for a [DocumentLinkRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentLinkOptions {
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
+
     /// Document links have a resolve provider as well.
     pub resolve_provider: Option<bool>,
-
-    pub work_done_progress: Option<bool>,
 }
 
 /// Value-object describing what options formatting should use.
@@ -6935,21 +6600,23 @@ pub struct FormattingOptions {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentFormattingOptions {
-    pub work_done_progress: Option<bool>,
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
 }
 
 /// Provider options for a [DocumentRangeFormattingRequest].
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DocumentRangeFormattingOptions {
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
+
     /// Whether the server supports formatting multiple ranges at once.
     ///
     /// @since 3.18.0
     /// @proposed
     #[cfg(feature = "proposed")]
     pub ranges_support: Option<bool>,
-
-    pub work_done_progress: Option<bool>,
 }
 
 /// Provider options for a [DocumentOnTypeFormattingRequest].
@@ -6967,12 +6634,13 @@ pub struct DocumentOnTypeFormattingOptions {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct RenameOptions {
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
+
     /// Renames should be checked and tested before being executed.
     ///
     /// @since version 3.12.0
     pub prepare_provider: Option<bool>,
-
-    pub work_done_progress: Option<bool>,
 }
 
 /// @since 3.18.0
@@ -6995,10 +6663,11 @@ pub struct PrepareRenameDefaultBehavior {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ExecuteCommandOptions {
+    #[serde(flatten)]
+    pub work_done_progress_options: WorkDoneProgressOptions,
+
     /// The commands to be executed on the server
     pub commands: Vec<String>,
-
-    pub work_done_progress: Option<bool>,
 }
 
 /// Additional data about a workspace edit.
@@ -7038,8 +6707,8 @@ pub struct SemanticTokensFullDelta {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct OptionalVersionedTextDocumentIdentifier {
-    /// The text document's uri.
-    pub uri: Url,
+    #[serde(flatten)]
+    pub text_document_identifier: TextDocumentIdentifier,
 
     /// The version number of this document. If a versioned text document identifier
     /// is sent from the server to the client and the file is not open in the editor
@@ -7056,16 +6725,11 @@ pub struct OptionalVersionedTextDocumentIdentifier {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct AnnotatedTextEdit {
+    #[serde(flatten)]
+    pub text_edit: TextEdit,
+
     /// The actual identifier of the change annotation
     pub annotation_id: ChangeAnnotationIdentifier,
-
-    /// The string to be inserted. For delete operations use an
-    /// empty string.
-    pub new_text: String,
-
-    /// The range of the text document to be manipulated. To insert
-    /// text into a document create a range where start === end.
-    pub range: Range,
 }
 
 /// An interactive text edit.
@@ -7163,16 +6827,8 @@ pub struct FileOperationPattern {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct WorkspaceFullDocumentDiagnosticReport {
-    /// The actual items.
-    pub items: Vec<Diagnostic>,
-
-    /// A full document diagnostic report.
-    pub kind: String,
-
-    /// An optional result id. If provided it will
-    /// be sent on the next diagnostic request for the
-    /// same document.
-    pub result_id: Option<String>,
+    #[serde(flatten)]
+    pub full_document_diagnostic_report: FullDocumentDiagnosticReport,
 
     /// The URI for which diagnostic information is reported.
     pub uri: Url,
@@ -7189,15 +6845,8 @@ pub struct WorkspaceFullDocumentDiagnosticReport {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct WorkspaceUnchangedDocumentDiagnosticReport {
-    /// A document diagnostic report indicating
-    /// no changes to the last result. A server can
-    /// only return `unchanged` if result ids are
-    /// provided.
-    pub kind: String,
-
-    /// A result id which will be sent on the next
-    /// diagnostic request for the same document.
-    pub result_id: String,
+    #[serde(flatten)]
+    pub unchanged_document_diagnostic_report: UnchangedDocumentDiagnosticReport,
 
     /// The URI for which diagnostic information is reported.
     pub uri: Url,
@@ -8705,26 +8354,8 @@ pub struct SelectionRangeClientCapabilities {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct PublishDiagnosticsClientCapabilities {
-    /// Client supports a codeDescription property
-    ///
-    /// @since 3.16.0
-    pub code_description_support: Option<bool>,
-
-    /// Whether code action supports the `data` property which is
-    /// preserved between a `textDocument/publishDiagnostics` and
-    /// `textDocument/codeAction` request.
-    ///
-    /// @since 3.16.0
-    pub data_support: Option<bool>,
-
-    /// Whether the clients accepts diagnostics with related information.
-    pub related_information: Option<bool>,
-
-    /// Client supports the tag property to provide meta data about a diagnostic.
-    /// Clients supporting tags have to handle unknown tags gracefully.
-    ///
-    /// @since 3.15.0
-    pub tag_support: Option<ClientDiagnosticsTagOptions>,
+    #[serde(flatten)]
+    pub diagnostics_capabilities: DiagnosticsCapabilities,
 
     /// Whether the client interprets the version property of the
     /// `textDocument/publishDiagnostics` notification's parameter.
@@ -8862,17 +8493,8 @@ pub struct InlayHintClientCapabilities {
 #[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DiagnosticClientCapabilities {
-    /// Client supports a codeDescription property
-    ///
-    /// @since 3.16.0
-    pub code_description_support: Option<bool>,
-
-    /// Whether code action supports the `data` property which is
-    /// preserved between a `textDocument/publishDiagnostics` and
-    /// `textDocument/codeAction` request.
-    ///
-    /// @since 3.16.0
-    pub data_support: Option<bool>,
+    #[serde(flatten)]
+    pub diagnostics_capabilities: DiagnosticsCapabilities,
 
     /// Whether implementation supports dynamic registration. If this is set to `true`
     /// the client supports the new `(TextDocumentRegistrationOptions & StaticRegistrationOptions)`
@@ -8881,15 +8503,6 @@ pub struct DiagnosticClientCapabilities {
 
     /// Whether the clients supports related documents for document diagnostic pulls.
     pub related_document_support: Option<bool>,
-
-    /// Whether the clients accepts diagnostics with related information.
-    pub related_information: Option<bool>,
-
-    /// Client supports the tag property to provide meta data about a diagnostic.
-    /// Clients supporting tags have to handle unknown tags gracefully.
-    ///
-    /// @since 3.15.0
-    pub tag_support: Option<ClientDiagnosticsTagOptions>,
 }
 
 /// Client capabilities specific to inline completions.

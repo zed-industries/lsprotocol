@@ -516,6 +516,10 @@ class Property:
         validator=attrs.validators.optional(attrs.validators.instance_of(str)),
         default=None,
     )
+    flattened: Optional[bool] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.instance_of(bool)),
+        default=None,
+    )
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Property):
