@@ -360,20 +360,6 @@ def generate_required_request_types(
     )
     generate_type_alias(lsp_id, types, spec)
 
-    lsp_id_optional = model.TypeAlias(
-        name="LSPIdOptional",
-        documentation="An identifier to denote a specific response.",
-        type=model.OrType(
-            kind="or",
-            items=[
-                model.BaseType(kind="base", name="integer"),
-                model.BaseType(kind="base", name="string"),
-                model.BaseType(kind="base", name="null"),
-            ],
-        ),
-    )
-    generate_type_alias(lsp_id_optional, types, spec)
-
 
 def generate_requests(spec: model.LSPModel, types: TypeData) -> Dict[str, List[str]]:
     generate_required_request_types(spec, types)
@@ -440,8 +426,8 @@ def generate_response(
     properties += [
         model.Property(
             name="id",
-            type=model.ReferenceType(kind="reference", name="LSPIdOptional"),
-            optional=False,
+            type=model.ReferenceType(kind="reference", name="LSPId"),
+            optional=True,
             documentation="The request id.",
         )
     ]

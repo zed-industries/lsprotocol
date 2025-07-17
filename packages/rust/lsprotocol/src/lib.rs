@@ -9721,15 +9721,6 @@ pub enum LSPId {
     String(String),
 }
 
-/// An identifier to denote a specific response.
-#[derive(Serialize, Deserialize, PartialEq, Debug, Eq, Clone)]
-#[serde(untagged)]
-pub enum LSPIdOptional {
-    Int(i32),
-    String(String),
-    None,
-}
-
 /// A request to resolve the implementation locations of a symbol at a given text
 /// document position. The request's parameter is of type [TextDocumentPositionParams]
 /// the response is of type [Definition] or a Thenable that resolves to such.
@@ -9759,7 +9750,7 @@ pub struct ImplementationResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<OR2<Definition, Vec<DefinitionLink>>>,
@@ -9794,7 +9785,7 @@ pub struct TypeDefinitionResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<OR2<Definition, Vec<DefinitionLink>>>,
@@ -9827,7 +9818,7 @@ pub struct WorkspaceFoldersResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<WorkspaceFolder>>,
@@ -9866,7 +9857,7 @@ pub struct ConfigurationResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: Vec<LSPAny>,
 }
@@ -9901,7 +9892,7 @@ pub struct DocumentColorResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: Vec<ColorInformation>,
 }
@@ -9936,7 +9927,7 @@ pub struct ColorPresentationResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: Vec<ColorPresentation>,
 }
@@ -9971,7 +9962,7 @@ pub struct FoldingRangeResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<FoldingRange>>,
@@ -10006,7 +9997,7 @@ pub struct FoldingRangeRefreshResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: LSPNull,
 }
@@ -10041,7 +10032,7 @@ pub struct DeclarationResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<OR2<Declaration, Vec<DeclarationLink>>>,
@@ -10077,7 +10068,7 @@ pub struct SelectionRangeResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<SelectionRange>>,
@@ -10111,7 +10102,7 @@ pub struct WorkDoneProgressCreateResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: LSPNull,
 }
@@ -10146,7 +10137,7 @@ pub struct CallHierarchyPrepareResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<CallHierarchyItem>>,
@@ -10181,7 +10172,7 @@ pub struct CallHierarchyIncomingCallsResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<CallHierarchyIncomingCall>>,
@@ -10216,7 +10207,7 @@ pub struct CallHierarchyOutgoingCallsResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<CallHierarchyOutgoingCall>>,
@@ -10249,7 +10240,7 @@ pub struct SemanticTokensResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<SemanticTokens>,
@@ -10282,7 +10273,7 @@ pub struct SemanticTokensDeltaResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<OR2<SemanticTokens, SemanticTokensDelta>>,
@@ -10315,7 +10306,7 @@ pub struct SemanticTokensRangeResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<SemanticTokens>,
@@ -10348,7 +10339,7 @@ pub struct SemanticTokensRefreshResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: LSPNull,
 }
@@ -10385,7 +10376,7 @@ pub struct ShowDocumentResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: ShowDocumentResult,
 }
@@ -10419,7 +10410,7 @@ pub struct LinkedEditingRangeResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<LinkedEditingRanges>,
@@ -10459,7 +10450,7 @@ pub struct WillCreateFilesResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<WorkspaceEdit>,
@@ -10495,7 +10486,7 @@ pub struct WillRenameFilesResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<WorkspaceEdit>,
@@ -10531,7 +10522,7 @@ pub struct WillDeleteFilesResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<WorkspaceEdit>,
@@ -10566,7 +10557,7 @@ pub struct MonikerResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<Moniker>>,
@@ -10602,7 +10593,7 @@ pub struct TypeHierarchyPrepareResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<TypeHierarchyItem>>,
@@ -10637,7 +10628,7 @@ pub struct TypeHierarchySupertypesResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<TypeHierarchyItem>>,
@@ -10672,7 +10663,7 @@ pub struct TypeHierarchySubtypesResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<TypeHierarchyItem>>,
@@ -10709,7 +10700,7 @@ pub struct InlineValueResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<InlineValue>>,
@@ -10742,7 +10733,7 @@ pub struct InlineValueRefreshResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: LSPNull,
 }
@@ -10778,7 +10769,7 @@ pub struct InlayHintResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<InlayHint>>,
@@ -10815,7 +10806,7 @@ pub struct InlayHintResolveResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: InlayHint,
 }
@@ -10847,7 +10838,7 @@ pub struct InlayHintRefreshResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: LSPNull,
 }
@@ -10881,7 +10872,7 @@ pub struct DocumentDiagnosticResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: DocumentDiagnosticReport,
 }
@@ -10915,7 +10906,7 @@ pub struct WorkspaceDiagnosticResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: WorkspaceDiagnosticReport,
 }
@@ -10949,7 +10940,7 @@ pub struct DiagnosticRefreshResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: LSPNull,
 }
@@ -10987,7 +10978,7 @@ pub struct InlineCompletionResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<OR2<InlineCompletionList, Vec<InlineCompletionItem>>>,
@@ -11025,7 +11016,7 @@ pub struct TextDocumentContentResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: TextDocumentContentResult,
 }
@@ -11062,7 +11053,7 @@ pub struct TextDocumentContentRefreshResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: LSPNull,
 }
@@ -11095,7 +11086,7 @@ pub struct RegistrationResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: LSPNull,
 }
@@ -11128,7 +11119,7 @@ pub struct UnregistrationResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: LSPNull,
 }
@@ -11164,7 +11155,7 @@ pub struct InitializeResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: InitializeResult,
 }
@@ -11199,7 +11190,7 @@ pub struct ShutdownResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: LSPNull,
 }
@@ -11232,7 +11223,7 @@ pub struct ShowMessageResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<MessageActionItem>,
@@ -11270,7 +11261,7 @@ pub struct WillSaveTextDocumentWaitUntilResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<TextEdit>>,
@@ -11311,7 +11302,7 @@ pub struct CompletionResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<OR2<Vec<CompletionItem>, CompletionList>>,
@@ -11346,7 +11337,7 @@ pub struct CompletionResolveResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: CompletionItem,
 }
@@ -11380,7 +11371,7 @@ pub struct HoverResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Hover>,
@@ -11412,7 +11403,7 @@ pub struct SignatureHelpResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<SignatureHelp>,
@@ -11448,7 +11439,7 @@ pub struct DefinitionResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<OR2<Definition, Vec<DefinitionLink>>>,
@@ -11484,7 +11475,7 @@ pub struct ReferencesResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<Location>>,
@@ -11520,7 +11511,7 @@ pub struct DocumentHighlightResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<DocumentHighlight>>,
@@ -11556,7 +11547,7 @@ pub struct DocumentSymbolResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<OR2<Vec<SymbolInformation>, Vec<DocumentSymbol>>>,
@@ -11589,7 +11580,7 @@ pub struct CodeActionResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<OR2<Command, CodeAction>>>,
@@ -11624,7 +11615,7 @@ pub struct CodeActionResolveResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: CodeAction,
 }
@@ -11663,7 +11654,7 @@ pub struct WorkspaceSymbolResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<OR2<Vec<SymbolInformation>, Vec<WorkspaceSymbol>>>,
@@ -11699,7 +11690,7 @@ pub struct WorkspaceSymbolResolveResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: WorkspaceSymbol,
 }
@@ -11731,7 +11722,7 @@ pub struct CodeLensResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<CodeLens>>,
@@ -11764,7 +11755,7 @@ pub struct CodeLensResolveResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: CodeLens,
 }
@@ -11798,7 +11789,7 @@ pub struct CodeLensRefreshResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: LSPNull,
 }
@@ -11830,7 +11821,7 @@ pub struct DocumentLinkResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<DocumentLink>>,
@@ -11865,7 +11856,7 @@ pub struct DocumentLinkResolveResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: DocumentLink,
 }
@@ -11897,7 +11888,7 @@ pub struct DocumentFormattingResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<TextEdit>>,
@@ -11930,7 +11921,7 @@ pub struct DocumentRangeFormattingResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<TextEdit>>,
@@ -11967,7 +11958,7 @@ pub struct DocumentRangesFormattingResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<TextEdit>>,
@@ -12000,7 +11991,7 @@ pub struct DocumentOnTypeFormattingResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<TextEdit>>,
@@ -12033,7 +12024,7 @@ pub struct RenameResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<WorkspaceEdit>,
@@ -12068,7 +12059,7 @@ pub struct PrepareRenameResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<PrepareRenameResult>,
@@ -12102,7 +12093,7 @@ pub struct ExecuteCommandResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<LSPAny>,
@@ -12135,7 +12126,7 @@ pub struct ApplyWorkspaceEditResponse {
     pub method: LSPRequestMethods,
 
     /// The request id.
-    pub id: LSPIdOptional,
+    pub id: Option<LSPId>,
 
     pub result: ApplyWorkspaceEditResult,
 }
